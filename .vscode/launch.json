@@ -1,0 +1,50 @@
+{
+  // Use IntelliSense to learn about possible attributes.
+  // Hover to view descriptions of existing attributes.
+  // For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387
+  "version": "0.2.0",
+  "configurations": [
+    {
+      "name": "outograph",
+      "request": "launch",
+      "type": "dart"
+    },
+    {
+      "name": "outograph (profile mode)",
+      "request": "launch",
+      "type": "dart",
+      "flutterMode": "profile"
+    },
+    {
+      "name": "outograph (release mode)",
+      "request": "launch",
+      "type": "dart",
+      "flutterMode": "release"
+    },
+    {
+      "name": "outograph (profile mode sksl)",
+      "request": "launch",
+      "type": "dart",
+      "flutterMode": "profile",
+      "args": ["--cache-sksl", "--purge-persistent-cache"]
+      //   "args": [
+      //     "-d",
+      //     "web-server",
+      //     "--web-hostname",
+      //     "192.168.100.35",
+      //     "--web-port",
+      //     "8000",
+      //     "--web-renderer html"
+      //   ]
+      // "args": [
+      //   "-d",
+      //   "chrome",
+      //   "--web-hostname",
+      //   "192.168.100.35",
+      //   "--web-port",
+      //   "8000",
+      //   "--web-renderer html"
+      // ]
+    }
+  ]
+}

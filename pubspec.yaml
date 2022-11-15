@@ -1,0 +1,47 @@
+name: outograph
+version: 1.0.0+1
+publish_to: none
+description: A new Flutter project.
+environment: 
+  sdk: '>=2.18.1 <3.0.0'
+
+dependencies: 
+  cupertino_icons: ^1.0.2
+  get: 4.6.1
+  # matrix_gesture_detector: ^0.2.0-nullsafety.1
+  # matrix_gesture_detector:
+  #   git:
+  #     url: https://github.com/makayasa/matrix_gesture_detector.git
+  flutter: 
+    sdk: flutter
+  get_storage: ^2.0.3
+  # storage_path: ^0.2.0
+  storage_path:
+    git:
+      url: https://github.com/makayasa/StoragePath.git
+  permission_handler: ^10.2.0
+  photo_manager: ^2.4.1
+  sliding_up_panel: ^2.0.0+1
+  giphy_get: ^3.1.1
+  cached_network_image: ^3.2.2
+  google_fonts: ^3.0.1
+  painter: ^2.0.0
+  flutter_colorpicker: ^1.0.3
+  # cyclop: ^0.6.0
+  cyclop: 
+    git: 
+      url: https://github.com/makayasa/cyclop.git
+  flutter_keyboard_visibility: ^5.4.0
+  matrix4_transform: ^2.0.1
+
+dev_dependencies: 
+  flutter_lints: ^2.0.0
+  flutter_test: 
+    sdk: flutter
+
+flutter: 
+  uses-material-design: true
+  assets:
+    - assets/icons/
+    - assets/images/
+    - google_fonts/
