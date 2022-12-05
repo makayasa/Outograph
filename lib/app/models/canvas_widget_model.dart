@@ -16,13 +16,19 @@ class CanvasItemModels {
     this.canTranslate = true,
     this.dx = 0.0,
     this.dy = 0.0,
-    this.scale = 0.0,
+    this.configDx = 0.0,
+    this.configDy = 0.0,
+    this.scale = 1.0,
     this.rotation = 0.0,
     required this.color,
     required this.matrix,
     required this.matrixTranslation,
     required this.matrixScale,
     required this.matrixRotaion,
+    this.topEdge = 0.0,
+    this.bottomEdge = 0.0,
+    this.leftEdge = 0.0,
+    this.rightEdge = 0.0,
   });
 
   String type;
@@ -39,6 +45,8 @@ class CanvasItemModels {
   bool canTranslate;
   double dx;
   double dy;
+  double configDx;
+  double configDy;
   double scale;
   double rotation;
   int color;
@@ -46,6 +54,10 @@ class CanvasItemModels {
   Float64List matrixTranslation;
   Float64List matrixScale;
   Float64List matrixRotaion;
+  double topEdge;
+  double bottomEdge;
+  double leftEdge;
+  double rightEdge;
 
   factory CanvasItemModels.fromJson(Map<String, dynamic> json) => CanvasItemModels(
         type: json["type"],
@@ -57,6 +69,8 @@ class CanvasItemModels {
         canTranslate: json['can_translate'],
         dx: json["dx"],
         dy: json["dy"],
+        configDx: json['configDx'],
+        configDy: json['configDy'],
         scale: json["scale"],
         rotation: json["rotation"],
         color: json["color"],
@@ -64,6 +78,10 @@ class CanvasItemModels {
         matrixTranslation: Float64List.fromList((json['matrix_translation'] as List).map((e) => e as double).toList()),
         matrixScale: Float64List.fromList((json['matrix_scale'] as List).map((e) => e as double).toList()),
         matrixRotaion: Float64List.fromList((json['matrix_rotation'] as List).map((e) => e as double).toList()),
+        topEdge: json['top_edge'],
+        bottomEdge: json['bottom_edge'],
+        leftEdge: json['left_edge'],
+        rightEdge: json['right_edge'],
       );
 
   Map<String, dynamic> toJson() => {
@@ -76,6 +94,8 @@ class CanvasItemModels {
         'can_translate': canTranslate,
         "dx": dx,
         "dy": dy,
+        'configDx': configDx,
+        'configDy': configDy,
         "scale": scale,
         "rotation": rotation,
         "color": color,
@@ -83,5 +103,9 @@ class CanvasItemModels {
         "matrix_translation": matrixTranslation,
         "matrix_scale": matrixScale,
         "matrix_rotation": matrixRotaion,
+        'top_edge': topEdge,
+        'bottom_edge': bottomEdge,
+        'left_edge': leftEdge,
+        'right_edge': rightEdge,
       };
 }

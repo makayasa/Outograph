@@ -1,13 +1,11 @@
 import 'package:cyclop/cyclop.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:matrix4_transform/matrix4_transform.dart';
 import 'package:outograph/app/components/default_text.dart';
-import 'package:outograph/app/components/mx_gesture_detector.dart';
-import 'package:outograph/app/components/overlay_widget.dart';
 import 'package:outograph/app/config/constants.dart';
 import 'package:outograph/app/helpers/canvas_helper.dart';
 import 'package:outograph/app/helpers/text_size_helper.dart';
+import 'package:outograph/app/models/snap_res_model.dart';
 import 'package:outograph/app/modules/canvas/components/brush_item.dart';
 import 'package:outograph/app/modules/canvas/components/color_item.dart';
 import 'package:outograph/app/modules/canvas/components/text_editing_alignment.dart';
@@ -126,11 +124,24 @@ class CanvasView extends GetView<CanvasController> {
           ],
         ),
         //* floating button
-        // floatingActionButton: FloatingActionButton(
-        //   onPressed: () {
-        //     controller.addWidget(type: 'container');
-        //   },
-        // ),
+        floatingActionButton: FloatingActionButton(
+          onPressed: () {
+            var idx = controller.getIndexActiveEditMode();
+            controller.widgetsData[1]['scale'] = 1.0;
+            var size = controller.getSize(1);
+            var x = 347.6143973214286;
+            var y = 141.36160714285705;
+            var diffWidth = controller.widgetsData[1]['default_width'] - size['width'];
+            logKey('diffWidth float', diffWidth);
+            var diffHeight = controller.widgetsData[1]['default_height'] - size['height'];
+            controller.widgetsData[1]['dx'] = x - (diffWidth / 2) - size['width'];
+            controller.widgetsData[1]['configDx'] = x - (diffWidth / 2);
+            controller.widgetsData[1]['dy'] = y - (diffHeight / 2);
+            controller.widgetsData[1]['configDy'] = y - (diffHeight / 2);
+            controller.widgetsData.refresh();
+            logKey('data', controller.widgetsData);
+          },
+        ),
         // floatingActionButtonLocation: FloatingActionButtonLocation.endTop,
         body: Container(
           width: Get.width,
@@ -140,6 +151,196 @@ class CanvasView extends GetView<CanvasController> {
             builder: (controller) {
               return Stack(
                 children: [
+                  // Positioned.fill(
+                  //   child: Container(
+                  //     child: Stack(
+                  //       fit: StackFit.expand,
+                  //       children: controller.widgetsData
+                  //           .asMap()
+                  //           .map(
+                  //             (idx, value) {
+                  //               var index = idx;
+                  //               var widget = CanvasItemModels.fromJson(controller.widgetsData[index]);
+                  //               var _scale = 1.0.obs;
+                  //               var _angle = 0.0.obs;
+                  //               var _angelDelta = 0.0.obs;
+                  //               var _oldAngel = 0.0.obs;
+
+                  //               var ddx = 0.0.obs;
+                  //               var ddy = 0.0.obs;
+
+                  //               var baseScaleFactor = 1.0;
+
+                  //               _angle.value = widget.rotation;
+                  //               if (widget.scale != 0) {
+                  //                 _scale.value = widget.scale;
+                  //               }
+
+                  //               if (widget.dx != 0) {
+                  //                 ddx.value = widget.dx;
+                  //               }
+                  //               if (widget.dy != 0) {
+                  //                 ddy.value = widget.dy;
+                  //               }
+                  //               if (controller.widgetsData[0]['type'] == CanvasItemType.BACKGROUND) {
+                  //                 index += 1;
+                  //               }
+
+                  //               Matrix4 _tempMatrix = Matrix4.identity();
+                  //               Matrix4 _tempTM = Matrix4.identity();
+                  //               Matrix4 _tempSM = Matrix4.identity();
+                  //               Matrix4 _tempRM = Matrix4.identity();
+
+                  //               return MapEntry(
+                  //                 index,
+                  //                 Obx(
+                  //                   () {
+                  //                     return Positioned(
+                  //                       top: ddy.value,
+                  //                       left: ddx.value,
+                  //                       child: Transform.rotate(
+                  //                         angle: _angle.value,
+                  //                         alignment: FractionalOffset.center,
+                  //                         // angle: pi / 12,
+                  //                         child: Transform.scale(
+                  //                           scale: _scale.value,
+                  //                           child: Container(
+                  //                             color: Colors.amber,
+                  //                             child: LayoutBuilder(
+                  //                               builder: (context, constraints) {
+                  //                                 Offset centerOfGestureDetector = Offset(constraints.maxWidth / 2, 130);
+                  //                                 logKey('centerOfGestureDetector', centerOfGestureDetector);
+                  //                                 return Stack(
+                  //                                   clipBehavior: Clip.none,
+                  //                                   children: [
+                  //                                     OverlayWidget(
+                  //                                       index: index,
+                  //                                       onTap: () {
+                  //                                         bool isEditMode = controller.checkEditMode();
+                  //                                         if (!isEditMode) {
+                  //                                           //* if text widget
+                  //                                           if (controller.widgetsData[index]['type'] == CanvasItemType.TEXT) {
+                  //                                             if (controller.checkTextEditActive()) {
+                  //                                               Get.snackbar('Alert', 'Please save your current text');
+                  //                                               return;
+                  //                                             }
+                  //                                             if (!controller.widgetsData[index]['edit_mode']) {
+                  //                                               controller.widgetsData[index]['edit_mode'] = true;
+                  //                                               controller.isTextEditMode.value = !controller.isTextEditMode.value;
+                  //                                               controller.widgetsData.refresh();
+                  //                                             }
+                  //                                             return;
+                  //                                           }
+
+                  //                                           controller.objectEditMode.value = true;
+                  //                                           controller.widgetsData[index]['edit_mode'] = !controller.widgetsData[index]['edit_mode'];
+                  //                                         }
+                  //                                         controller.widgetsData.refresh();
+                  //                                       },
+                  //                                       // shouldRotate: controller.widgetsData[index]['can_rotate'] ?? false,
+                  //                                       shouldRotate: true,
+                  //                                       shouldScale: controller.widgetsData[index]['can_resize'] ?? false,
+                  //                                       shouldTranslate: controller.widgetsData[index]['can_translate'] ?? true,
+                  //                                       newCallback: (dx, dy, scale, rotation) {
+                  //                                         ddx.value = dx;
+                  //                                         ddy.value = dy;
+                  //                                         logKey('scale newCallback,', scale);
+                  //                                       },
+                  //                                       callBack: (m) {
+                  //                                         logKey('callback', m);
+                  //                                         var zxc = MxGestureDetector.decomposeToValues(_tempMatrix);
+                  //                                         _angle.value = zxc.rotation;
+                  //                                         _scale.value = zxc.scale;
+                  //                                       },
+                  //                                       onScaleEnd: (details) {
+                  //                                         var decompose = MxGestureDetector.decomposeToValues(_tempMatrix);
+                  //                                         if (controller.redoStates.isNotEmpty) {
+                  //                                           controller.redoStates.clear();
+                  //                                         }
+                  //                                         //* for detect is it on the undo state. Needed to control the matrix widget
+                  //                                         var _undoState = controller.widgetsData[index]['imageWidgetBool'];
+                  //                                         controller.widgetsData[index]['dx'] = decompose.translation.dx;
+                  //                                         controller.widgetsData[index]['dy'] = decompose.translation.dy;
+                  //                                         controller.widgetsData[index]['scale'] = decompose.scale;
+                  //                                         controller.widgetsData[index]['rotation'] = decompose.rotation;
+                  //                                         controller.widgetsData[index]['matrix'] = _tempMatrix.storage;
+                  //                                         controller.widgetsData[index]['matrix_translation'] = _tempTM.storage;
+                  //                                         controller.widgetsData[index]['matrix_scale'] = _tempSM.storage;
+                  //                                         controller.widgetsData[index]['matrix_rotation'] = _tempRM.storage;
+                  //                                         controller.widgetsData[index]['imageWidgetBool'] = details['bool'];
+
+                  //                                         // logKey('rotation', decompose.rotation);
+                  //                                         logKey('ddx', decompose.translation.dx);
+                  //                                         logKey('ddy', decompose.translation.dy);
+
+                  //                                         var _size = controller.getSize(index);
+                  //                                         controller.widgetsData[index]['height'] = _size['height'];
+                  //                                         controller.widgetsData[index]['width'] = _size['width'];
+                  //                                         controller.widgetsData[index]['top_edge'] = decompose.translation.dy - (_size['height'] / 2);
+                  //                                         controller.widgetsData[index]['bottom_edge'] = decompose.translation.dy + (_size['height'] / 2);
+                  //                                         controller.widgetsData[index]['right_edge'] = decompose.translation.dy + (_size['width'] / 2);
+                  //                                         controller.widgetsData[index]['right_edge'] = decompose.translation.dy - (_size['width'] / 2);
+                  //                                         if (_undoState) {
+                  //                                           controller.widgetsData.refresh();
+                  //                                         }
+                  //                                         controller.saveState();
+                  //                                       },
+                  //                                       child: Align(
+                  //                                         // alignment: Alignment.center,
+                  //                                         // widthFactor: 1,
+                  //                                         // heightFactor: 1,
+                  //                                         child: Container(
+                  //                                           height: controller.widgetsData[index]['type'] == CanvasItemType.BRUSH_BASE ? Get.height + 65 : null,
+                  //                                           width: controller.widgetsData[index]['type'] == CanvasItemType.BRUSH_BASE ? Get.width + 80 : null,
+                  //                                           child: CanvasItem(index: index),
+                  //                                         ),
+                  //                                       ),
+                  //                                     ),
+                  //                                     Positioned(
+                  //                                       top: -10,
+                  //                                       right: -10,
+                  //                                       child: Transform.scale(
+                  //                                         scale: 1.0 / _scale.value,
+                  //                                         child: GestureDetector(
+                  //                                           onTap: () {
+                  //                                             logKey('tombol merah');
+                  //                                           },
+                  //                                           onPanStart: (details) {
+                  //                                             var touchPositionFromCenter = details.localPosition - centerOfGestureDetector;
+                  //                                             _angelDelta.value = _oldAngel.value - touchPositionFromCenter.direction;
+                  //                                           },
+                  //                                           onPanEnd: (details) {
+                  //                                             _oldAngel.value = _angle.value;
+                  //                                           },
+                  //                                           onPanUpdate: (details) {},
+                  //                                           child: Container(
+                  //                                             height: 40,
+                  //                                             width: 40,
+                  //                                             color: Colors.red,
+                  //                                           ),
+                  //                                         ),
+                  //                                       ),
+                  //                                     ),
+                  //                                   ],
+                  //                                 );
+                  //                               },
+                  //                             ),
+                  //                           ),
+                  //                         ),
+                  //                       ),
+                  //                     );
+                  //                   },
+                  //                 ),
+                  //               );
+                  //             },
+                  //           )
+                  //           .values
+                  //           .toList(),
+                  //     ),
+                  //   ),
+                  // ),
+
+                  // //* New OverlayWidget
                   Positioned.fill(
                     child: Container(
                       child: Stack(
@@ -149,109 +350,117 @@ class CanvasView extends GetView<CanvasController> {
                             .map(
                               (idx, value) {
                                 var index = idx;
-                                if (controller.widgetsData[0]['type'] == CanvasItemType.BACKGROUND) {
-                                  index += 1;
-                                }
-                                Matrix4 _tempMatrix = Matrix4.identity();
-                                Matrix4 _tempTM = Matrix4.identity();
-                                Matrix4 _tempSM = Matrix4.identity();
-                                Matrix4 _tempRM = Matrix4.identity();
+                                var baseScaleFactor = 1.0;
+                                var baseRotationFactor = 0.0;
 
+                                // var _offset = Offset.zero;
+                                var _initialFocalPoint = Offset.zero;
+                                var _sessionOffet = Offset.zero;
+                                bool snapTrigger = false;
                                 return MapEntry(
                                   index,
-                                  OverlayWidget(
-                                    index: index,
-                                    onTap: () {
-                                      // if (controller.widgetsData[index]['type'] == CanvasItemType.TEXT) {
-                                      //   if (controller.checkTextEditActive()) {
-                                      //     Get.snackbar('Alert', 'Please save your current text');
-                                      //     return;
-                                      //   }
-                                      //   if (!controller.widgetsData[index]['edit_mode']) {
-                                      //     controller.widgetsData[index]['edit_mode'] = true;
-                                      //     controller.isTextEditMode.value = !controller.isTextEditMode.value;
-                                      //     controller.widgetsData.refresh();
-                                      //   }
-                                      //   return;
-                                      // }
+                                  Obx(
+                                    () {
+                                      var _widgetData = CanvasItemModels.fromJson(controller.widgetsData[index]).obs;
+                                      return Positioned(
+                                        left: _widgetData.value.dx,
+                                        top: _widgetData.value.dy,
+                                        child: Transform.rotate(
+                                          angle: _widgetData.value.rotation,
+                                          child: Transform.scale(
+                                            scale: _widgetData.value.scale,
+                                            child: GestureDetector(
+                                              onTap: () {
+                                                bool isEditMode = controller.checkEditMode();
+                                                if (!isEditMode) {
+                                                  //* if text widget
+                                                  if (controller.widgetsData[index]['type'] == CanvasItemType.TEXT) {
+                                                    if (controller.checkTextEditActive()) {
+                                                      Get.snackbar('Alert', 'Please save your current text');
+                                                      return;
+                                                    }
+                                                    if (!controller.widgetsData[index]['edit_mode']) {
+                                                      controller.widgetsData[index]['edit_mode'] = true;
+                                                      controller.isTextEditMode.value = !controller.isTextEditMode.value;
+                                                      controller.widgetsData.refresh();
+                                                    }
+                                                    return;
+                                                  }
 
-                                      //* test
-                                      bool isEditMode = controller.checkEditMode();
-                                      if (!isEditMode) {
-                                        //* if text widget
-                                        if (controller.widgetsData[index]['type'] == CanvasItemType.TEXT) {
-                                          if (controller.checkTextEditActive()) {
-                                            Get.snackbar('Alert', 'Please save your current text');
-                                            return;
-                                          }
-                                          if (!controller.widgetsData[index]['edit_mode']) {
-                                            controller.widgetsData[index]['edit_mode'] = true;
-                                            controller.isTextEditMode.value = !controller.isTextEditMode.value;
-                                            controller.widgetsData.refresh();
-                                          }
-                                          return;
-                                        }
+                                                  controller.objectEditMode.value = true;
+                                                  controller.widgetsData[index]['edit_mode'] = !controller.widgetsData[index]['edit_mode'];
+                                                }
+                                                controller.widgetsData.refresh();
+                                              },
+                                              onScaleStart: (details) {
+                                                baseScaleFactor = _widgetData.value.scale;
+                                                baseRotationFactor = _widgetData.value.rotation;
+                                                _initialFocalPoint = details.focalPoint;
+                                              },
+                                              onScaleUpdate: (details) {
+                                                _sessionOffet = details.focalPoint - _initialFocalPoint;
+                                                if (!controller.shouldSnap.value) {
+                                                  controller.widgetsData[index]['dx'] = _sessionOffet.dx + _widgetData.value.configDx;
+                                                  controller.widgetsData[index]['dy'] = _sessionOffet.dy + _widgetData.value.configDy;
+                                                  if (_widgetData.value.canResize) {
+                                                    controller.widgetsData[index]['scale'] = baseScaleFactor * details.scale;
+                                                  }
+                                                  if (_widgetData.value.canRotate) {
+                                                    controller.widgetsData[index]['rotation'] = baseRotationFactor + details.rotation;
+                                                  }
+                                                  _widgetData.refresh();
+                                                  return;
+                                                }
 
-                                        controller.objectEditMode.value = true;
-                                        controller.widgetsData[index]['edit_mode'] = !controller.widgetsData[index]['edit_mode'];
-                                      }
-                                      // else {
-                                      //   if (controller.widgetsData[index]['edit_mode']) {
-                                      //     controller.widgetsData[index]['edit_mode'] = false;
-                                      //     controller.objectEditMode.value = false;
-                                      //   }
-                                      // }
-                                      controller.widgetsData.refresh();
+                                                //* if should snap
+                                                controller.calcEdge(index);
+                                                var edge = controller.checkEdge(index);
+                                                var res = SnapResModel.fromJson(edge);
+                                                if (!res.trigger) {
+                                                  controller.widgetsData[index]['dx'] = _sessionOffet.dx + _widgetData.value.configDx;
+                                                  controller.widgetsData[index]['dy'] = _sessionOffet.dy + _widgetData.value.configDy;
+                                                  if (_widgetData.value.canResize) {
+                                                    controller.widgetsData[index]['scale'] = baseScaleFactor * details.scale;
+                                                  }
+                                                  if (_widgetData.value.canRotate) {
+                                                    controller.widgetsData[index]['rotation'] = baseRotationFactor + details.rotation;
+                                                  }
+                                                } else {
+                                                  if (res.isLeft || res.isRight) {
+                                                    if (_sessionOffet.dx > 15 || _sessionOffet.dx <= -15) {
+                                                      controller.widgetsData[index]['dx'] = _sessionOffet.dx + _widgetData.value.configDx;
+                                                    }
+                                                    controller.widgetsData[index]['dy'] = _sessionOffet.dy + _widgetData.value.configDy;
+                                                  } else if (res.isTop || res.isBottom) {
+                                                    if (_sessionOffet.dy > 15 || _sessionOffet.dy <= -15) {
+                                                      controller.widgetsData[index]['dy'] = _sessionOffet.dy + _widgetData.value.configDy;
+                                                    }
+                                                    controller.widgetsData[index]['dx'] = _sessionOffet.dx + _widgetData.value.configDx;
+                                                  }
+                                                }
 
-                                      // return;
-                                      // if (!controller.widgetsData[index]['edit_mode']) {
-                                      //   controller.widgetsData[index]['can_rotate'] = false;
-                                      //   controller.widgetsData[index]['can_resize'] = false;
-                                      // }
-                                      // controller.widgetsData.refresh();
+                                                _widgetData.refresh();
+                                              },
+                                              onScaleEnd: (details) {
+                                                // _offset += _sessionOffet;
+                                                logKey('snapTrigger', snapTrigger);
+                                                if (!snapTrigger) {
+                                                  controller.widgetsData[index]['configDx'] += _sessionOffet.dx;
+                                                  controller.widgetsData[index]['configDy'] += _sessionOffet.dy;
+                                                  _sessionOffet = Offset.zero;
+                                                  _widgetData.refresh();
+                                                  controller.saveState();
+                                                  // logKey('data scaleEnd', controller.widgetsData[index]['left_edge']);
+                                                }
+                                              },
+                                              child: Container(
+                                                child: CanvasItem(index: index),
+                                              ),
+                                            ),
+                                          ),
+                                        ),
+                                      );
                                     },
-                                    shouldRotate: controller.widgetsData[index]['can_rotate'] ?? false,
-                                    shouldScale: controller.widgetsData[index]['can_resize'] ?? false,
-                                    shouldTranslate: controller.widgetsData[index]['can_translate'] ?? true,
-                                    callBack: (m, tm, sm, rm) {
-                                      _tempMatrix = MxGestureDetector.compose(m, tm, sm, rm);
-                                      _tempTM = tm;
-                                      _tempSM = sm;
-                                      _tempRM = rm;
-                                    },
-                                    onScaleEnd: (details) {
-                                      var decompose = MxGestureDetector.decomposeToValues(_tempMatrix);
-                                      if (controller.redoStates.isNotEmpty) {
-                                        controller.redoStates.clear();
-                                      }
-
-                                      //* for detect is it on the undo state. Needed to control the matrix widget
-                                      var _undoState = controller.widgetsData[index]['imageWidgetBool'];
-
-                                      controller.widgetsData[index]['dx'] = decompose.translation.dx;
-                                      controller.widgetsData[index]['dy'] = decompose.translation.dy;
-                                      controller.widgetsData[index]['scale'] = decompose.scale;
-                                      controller.widgetsData[index]['rotation'] = decompose.rotation;
-                                      controller.widgetsData[index]['matrix'] = _tempMatrix.storage;
-                                      controller.widgetsData[index]['matrix_translation'] = _tempTM.storage;
-                                      controller.widgetsData[index]['matrix_scale'] = _tempSM.storage;
-                                      controller.widgetsData[index]['matrix_rotation'] = _tempRM.storage;
-                                      controller.widgetsData[index]['imageWidgetBool'] = details['bool'];
-                                      if (_undoState) {
-                                        controller.widgetsData.refresh();
-                                      }
-                                      controller.saveState();
-                                    },
-                                    child: Align(
-                                      alignment: Alignment.center,
-                                      widthFactor: 1,
-                                      heightFactor: 1,
-                                      child: Container(
-                                        height: controller.widgetsData[index]['type'] == CanvasItemType.BRUSH_BASE ? Get.height + 65 : null,
-                                        width: controller.widgetsData[index]['type'] == CanvasItemType.BRUSH_BASE ? Get.width + 80 : null,
-                                        child: CanvasItem(index: index),
-                                      ),
-                                    ),
                                   ),
                                 );
                               },
@@ -261,6 +470,7 @@ class CanvasView extends GetView<CanvasController> {
                       ),
                     ),
                   ),
+
                   //* Sliding up panel
                   //* image panel
                   Obx(
@@ -331,49 +541,16 @@ class CanvasView extends GetView<CanvasController> {
                                       var canRorate = controller.widgetsData[idx]['can_rotate'];
                                       logKey('canRotate', canRorate);
                                       return Expanded(
-                                        child: Container(
-                                          child: Image.asset(
-                                            'assets/icons/rotate-object.png',
-                                            color: !canRorate ? kInactiveColor : kBgBlack,
-                                          ),
-                                        ),
-                                      );
-                                    },
-                                  ),
-                                  SizedBox(width: 10),
-                                  Obx(
-                                    () {
-                                      var idx = controller.getIndexActiveEditMode();
-                                      return Expanded(
                                         child: GestureDetector(
                                           onTap: () {
-                                            var temp = CanvasItemModels.fromJson(controller.widgetsData[idx]).obs;
-                                            // var a = Matrix4.fromFloat64List(temp.matrix);
-                                            // var zxc = Matrix4Transform.from(Matrix4.fromFloat64List(temp.matrix)).rotateDegrees(
-                                            //   45,
-                                            //   origin: Offset(
-                                            //     Get.width / 2,
-                                            //     Get.height / 2,
-                                            //   ),
-                                            // );
-                                            var zxc = Matrix4Transform.from(Matrix4.fromFloat64List(temp.value.matrix)).rotate(
-                                              -temp.value.rotation,
-                                              origin: Offset(
-                                                Get.width / 2,
-                                                Get.height / 2,
-                                              ),
-                                            );
-                                            // logKey('temp', temp.toJson());
-
-                                            controller.widgetsData[idx]['matrix'] = zxc.matrix4.storage;
-                                            controller.widgetsData[idx]['imageWidgetBool'] = true;
-                                            controller.widgetsData.refresh();
-                                            // logKey('matrix temp', temp.matrix);
-                                            // logKey('matrix temp after rotate', a.storage);
+                                            // controller.widgetsData[idx]['can_rotate'] = !controller.widgetsData[idx]['can_rotate'];
+                                            // controller.widgetsData.refresh();
+                                            controller.rotation45Degree();
                                           },
                                           child: Container(
                                             child: Image.asset(
-                                              'assets/icons/reset-rotate.png',
+                                              'assets/icons/rotate-object.png',
+                                              color: !canRorate ? kInactiveColor : kBgBlack,
                                             ),
                                           ),
                                         ),
@@ -381,23 +558,49 @@ class CanvasView extends GetView<CanvasController> {
                                     },
                                   ),
                                   SizedBox(width: 10),
+                                  Expanded(
+                                    child: GestureDetector(
+                                      onTap: () {
+                                        controller.resetRotation();
+                                      },
+                                      child: Container(
+                                        child: Image.asset(
+                                          'assets/icons/reset-rotate.png',
+                                        ),
+                                      ),
+                                    ),
+                                  ),
+                                  SizedBox(width: 10),
                                   VerticalDivider(
                                     indent: 10,
                                     endIndent: 10,
                                     color: kBgBlack,
                                   ),
-                                  Expanded(
-                                    child: Container(
-                                      child: Image.asset(
-                                        'assets/icons/magnet.png',
+                                  Obx(
+                                    () => Expanded(
+                                      child: GestureDetector(
+                                        onTap: () {
+                                          controller.shouldSnap.value = !controller.shouldSnap.value;
+                                        },
+                                        child: Container(
+                                          child: Image.asset(
+                                            'assets/icons/magnet.png',
+                                            color: !controller.shouldSnap.value ? kInactiveColor : kBgBlack,
+                                          ),
+                                        ),
                                       ),
                                     ),
                                   ),
                                   SizedBox(width: 10),
                                   Expanded(
-                                    child: Container(
-                                      child: Image.asset(
-                                        'assets/icons/crop.png',
+                                    child: GestureDetector(
+                                      onTap: () {
+                                        controller.cropImage();
+                                      },
+                                      child: Container(
+                                        child: Image.asset(
+                                          'assets/icons/crop.png',
+                                        ),
                                       ),
                                     ),
                                   ),
@@ -411,20 +614,20 @@ class CanvasView extends GetView<CanvasController> {
                                     () {
                                       var idx = controller.getIndexActiveEditMode();
                                       var temp = CanvasItemModels.fromJson(controller.widgetsData[idx]).obs;
-                                      return GestureDetector(
-                                        onTap: () {
-                                          if (!temp.value.canResize && !temp.value.canRotate && !temp.value.canTranslate) {
-                                            controller.widgetsData[idx]['can_rotate'] = true;
-                                            controller.widgetsData[idx]['can_resize'] = true;
-                                            controller.widgetsData[idx]['can_translate'] = true;
-                                          } else {
-                                            controller.widgetsData[idx]['can_rotate'] = false;
-                                            controller.widgetsData[idx]['can_resize'] = false;
-                                            controller.widgetsData[idx]['can_translate'] = false;
-                                          }
-                                          controller.widgetsData.refresh();
-                                        },
-                                        child: Expanded(
+                                      return Expanded(
+                                        child: GestureDetector(
+                                          onTap: () {
+                                            if (!temp.value.canResize && !temp.value.canRotate && !temp.value.canTranslate) {
+                                              controller.widgetsData[idx]['can_rotate'] = true;
+                                              controller.widgetsData[idx]['can_resize'] = true;
+                                              controller.widgetsData[idx]['can_translate'] = true;
+                                            } else {
+                                              controller.widgetsData[idx]['can_rotate'] = false;
+                                              controller.widgetsData[idx]['can_resize'] = false;
+                                              controller.widgetsData[idx]['can_translate'] = false;
+                                            }
+                                            controller.widgetsData.refresh();
+                                          },
                                           child: Container(
                                             child: Image.asset(
                                               !temp.value.canTranslate && !temp.value.canResize && !temp.value.canRotate
@@ -438,9 +641,17 @@ class CanvasView extends GetView<CanvasController> {
                                   ),
                                   SizedBox(width: 10),
                                   Expanded(
-                                    child: Container(
-                                      child: Image.asset(
-                                        'assets/icons/show-preview.png',
+                                    child: GestureDetector(
+                                      onTap: () {
+                                        // logKey('widgetData', controller.widgetsData);
+                                        // controller.testSameMatrix();
+                                        controller.moveTo(top: true);
+                                        // controller.getSize();
+                                      },
+                                      child: Container(
+                                        child: Image.asset(
+                                          'assets/icons/show-preview.png',
+                                        ),
                                       ),
                                     ),
                                   ),
@@ -678,6 +889,9 @@ class CanvasView extends GetView<CanvasController> {
                                 asset: 'assets/icons/image.png',
                                 text: 'Image',
                                 onTap: () {
+                                  if (controller.objectEditMode.value) {
+                                    return;
+                                  }
                                   controller.botNavTap(0);
                                   if (controller.botNavIndex.value == 0) {
                                     controller.openImage();
@@ -692,6 +906,9 @@ class CanvasView extends GetView<CanvasController> {
                               asset: 'assets/icons/art.png',
                               text: 'Art',
                               onTap: () {
+                                if (controller.objectEditMode.value) {
+                                  return;
+                                }
                                 controller.botNavTap(1);
                                 controller.testGif();
                               },
@@ -703,6 +920,9 @@ class CanvasView extends GetView<CanvasController> {
                               asset: 'assets/icons/text.png',
                               text: 'Text',
                               onTap: () {
+                                if (controller.objectEditMode.value) {
+                                  return;
+                                }
                                 controller.botNavTap(2);
                                 if (controller.botNavIndex.value == 2) {
                                   controller.addWidget(
@@ -723,6 +943,9 @@ class CanvasView extends GetView<CanvasController> {
                               asset: 'assets/icons/background.png',
                               text: 'Background',
                               onTap: () {
+                                if (controller.objectEditMode.value) {
+                                  return;
+                                }
                                 controller.botNavTap(3);
                               },
                             ),
@@ -733,6 +956,9 @@ class CanvasView extends GetView<CanvasController> {
                               asset: 'assets/icons/brush.png',
                               text: 'Brush',
                               onTap: () {
+                                if (controller.objectEditMode.value) {
+                                  return;
+                                }
                                 controller.botNavTap(4);
                                 var isBrushExist = controller.checkBrushExist();
                                 logKey('isBrushExist', isBrushExist);

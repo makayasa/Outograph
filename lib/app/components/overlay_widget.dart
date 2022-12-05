@@ -46,8 +46,6 @@ class OverlayWidget extends GetView<CanvasController> {
         dynamic tempMS = ctrl.widgetsData[index]['matrix_scale'];
         dynamic tempRS = ctrl.widgetsData[index]['matrix_rotation'];
 
-        ValueNotifier<Matrix4>? notifier;
-
         var a = (ctrl.widgetsData[index]['matrix'] as List).map((item) => item as double).toList();
         tempMatrix = Float64List.fromList(a);
         ctrl.widgetsData[index]['matrix'] = tempMatrix;
@@ -64,7 +62,6 @@ class OverlayWidget extends GetView<CanvasController> {
         tempRS = Float64List.fromList(d);
         ctrl.widgetsData[index]['matrix_rotation'] = tempRS;
 
-        notifier = ValueNotifier(Matrix4.fromFloat64List(ctrl.widgetsData[index]['matrix'] = tempMatrix));
         return Obx(
           () => MxGestureDetector(
             behavior: behavior,
@@ -72,6 +69,7 @@ class OverlayWidget extends GetView<CanvasController> {
             shouldScale: shouldScale,
             shouldTranslate: shouldTranslate,
             onScaleEnd: onScaleEnd,
+            focalPointAlignment: Alignment.centerLeft,
             mMatrix: ctrl.widgetsData[index]['imageWidgetBool'] ? Matrix4.fromFloat64List(ctrl.widgetsData[index]['matrix']) : null,
             tMatrix: ctrl.widgetsData[index]['imageWidgetBool'] ? Matrix4.fromFloat64List(ctrl.widgetsData[index]['matrix_translation']) : null,
             sMatrix: ctrl.widgetsData[index]['imageWidgetBool'] ? Matrix4.fromFloat64List(ctrl.widgetsData[index]['matrix_scale']) : null,
@@ -80,20 +78,43 @@ class OverlayWidget extends GetView<CanvasController> {
             onTap: onTap,
             onMatrixUpdate: (m, tm, sm, rm) {
               callBack(m, tm, sm, rm);
-              notifier!.value = m;
+              var _temp = MxGestureDetector.compose(
+                m,
+                tm,
+                sm,
+                rm,
+              );
+              var asd = MxGestureDetector.decomposeToValues(_temp);
+              logKey('overlay scale', asd.scale);
+              // var a = MxGestureDetector.decomposeToValues(_temp);
+              // logKey('overlay rotation', a.rotation);
+              // notifier!.value = m;
+              // rotationNotifier!.value = a.rotation;
+              // dxNotifier!.value = a.translation.dx;
+              // dyNotifier!.value = a.translation.dy;
             },
-            child: AnimatedBuilder(
-              animation: notifier!,
-              builder: (ctx, childWidget) {
-                return Transform(
-                  transform: notifier!.value,
-                  child: Align(
-                    alignment: Alignment.center,
-                    child: child,
-                  ),
-                );
-              },
-            ),
+            // child: AnimatedBuilder(
+            //   animation: notifier!,
+            //   // animation: asd!,
+            //   builder: (ctx, childWidget) {
+            //     // return Transform(
+            //     //   transform: notifier!.value,
+            //     //   child: Align(
+            //     //     alignment: Alignment.center,
+            //     //     child: child,
+            //     //   ),
+            //     // );
+            //     return Transform.translate(
+            //       offset: Offset.zero,
+            //       child: Transform.rotate(
+            //         angle: rotationNotifier!.value,
+            //         // angle: 0,
+            //         child: child,
+            //       ),
+            //     );
+            //   },
+            // ),
+            child: child,
           ),
         );
       },

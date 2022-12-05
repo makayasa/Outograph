@@ -10,6 +10,8 @@ import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
 import 'package:giphy_get/giphy_get.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:image_cropper/image_cropper.dart';
+import 'package:matrix4_transform/matrix4_transform.dart';
 import 'package:outograph/app/helpers/canvas_helper.dart';
 import 'package:outograph/app/models/canvas_widget_model.dart';
 import 'package:outograph/app/models/draw_pont.dart';
@@ -17,6 +19,7 @@ import 'package:outograph/app/models/image_widget_data_models.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:photo_manager/photo_manager.dart';
 import 'package:sliding_up_panel/sliding_up_panel.dart';
+import 'package:vector_math/vector_math.dart' as vm;
 
 import '../../../../utils/function_utils.dart';
 import '../../../components/default_text.dart';
@@ -24,11 +27,18 @@ import '../../../config/constants.dart';
 import '../../../models/gif_widget_data_models.dart';
 
 class CanvasController extends GetxController {
+  GlobalKey keyRed = GlobalKey();
+
+  List<GlobalKey> listGlobalKey = [];
+
   var box = GetStorage();
   var bait = 75.obs;
+  var tex = 0.0.obs;
+  var tey = 0.0.obs;
 
   var botNavIndex = (0 - 1).obs;
   var widgetsData = [].obs;
+  var shouldSnap = true.obs;
 
   var objectEditMode = false.obs;
 
@@ -104,7 +114,102 @@ class CanvasController extends GetxController {
     }
   }
 
-  void addWidget({String type = '', dynamic data}) {
+  checkEdge(index) {
+    var trigger = false;
+    var isTop = false;
+    var isBottom = false;
+    var isLeft = false;
+    var isRight = false;
+    for (var i = 0; i < widgetsData.length; i++) {
+      var activeItem = CanvasItemModels.fromJson(widgetsData[index]);
+      var compareItem = CanvasItemModels.fromJson(widgetsData[i]);
+      if (i != index) {
+        var size = getSize(index);
+        var diffWidth = widgetsData[index]['default_width'] - size['width'];
+        var diffHeight = widgetsData[index]['default_height'] - size['height'];
+        //* left to left snap
+        if (activeItem.leftEdge.floor() == compareItem.leftEdge.floor()) {
+          widgetsData[index]['dx'] = compareItem.leftEdge - (diffWidth / 2);
+          trigger = true;
+          isLeft = true;
+        }
+        //* Right to right snap
+        else if (activeItem.rightEdge.floor() == compareItem.rightEdge.floor()) {
+          widgetsData[index]['dx'] = compareItem.rightEdge - (diffWidth / 2) - size['width'];
+          trigger = true;
+          isRight = true;
+        }
+
+        //* left to right snap
+        else if (activeItem.leftEdge.floor() == compareItem.rightEdge.floor()) {
+          widgetsData[index]['dx'] = compareItem.rightEdge - (diffWidth / 2);
+          trigger = true;
+          isRight = true;
+        }
+
+        //* Right to left snap
+        else if (activeItem.rightEdge.floor() == compareItem.leftEdge.floor()) {
+          widgetsData[index]['dx'] = compareItem.leftEdge - (diffWidth / 2) - size['width'];
+          trigger = true;
+          isLeft = true;
+        }
+        //* Top to top snap
+        else if (activeItem.topEdge.floor() == compareItem.topEdge.floor()) {
+          widgetsData[index]['dy'] = compareItem.topEdge - (diffHeight / 2);
+          trigger = true;
+          isTop = true;
+        }
+        //* Top to bottom snap
+        else if (activeItem.topEdge.floor() == compareItem.bottomEdge.floor()) {
+          widgetsData[index]['dy'] = compareItem.bottomEdge - (diffHeight / 2);
+          trigger = true;
+          isTop = true;
+        }
+        //* Bottom to bottom snap
+        else if (activeItem.bottomEdge.floor() == compareItem.bottomEdge.floor()) {
+          widgetsData[index]['dy'] = compareItem.bottomEdge - (diffHeight / 2) - size['height'];
+          trigger = true;
+          isBottom = true;
+        }
+        //* Bottom to top snap
+        else if (activeItem.bottomEdge.floor() == compareItem.topEdge.floor()) {
+          widgetsData[index]['dy'] = compareItem.topEdge - (diffHeight / 2) - size['height'];
+        }
+        if (activeItem.leftEdge == compareItem.leftEdge) {
+          if (!Get.isSnackbarOpen) {
+            // Get.snackbar('Snapped', 'left');
+          }
+        }
+        if (activeItem.rightEdge == compareItem.rightEdge) {
+          if (!Get.isSnackbarOpen) {
+            // Get.snackbar('Snapped', 'right');
+          }
+        }
+      }
+    }
+    // return trigger;
+    return {
+      'trigger': trigger,
+      'isTop': isTop,
+      'isBottom': isBottom,
+      'isLeft': isLeft,
+      'isRight': isRight,
+    };
+  }
+
+  void calcEdge(index) {
+    var size = getSize(index);
+
+    var diffHeight = size['height'] - widgetsData[index]['default_height'];
+    var diffWidth = size['width'] - widgetsData[index]['default_width'];
+
+    widgetsData[index]['top_edge'] = widgetsData[index]['dy'] - (diffHeight / 2);
+    widgetsData[index]['bottom_edge'] = widgetsData[index]['top_edge'] + size['height'];
+    widgetsData[index]['left_edge'] = widgetsData[index]['dx'] - (diffWidth / 2);
+    widgetsData[index]['right_edge'] = widgetsData[index]['left_edge'] + size['width'];
+  }
+
+  void addWidget({String type = '', dynamic data}) async {
     redoStates.clear();
     logKey('addWidget type', type);
     var color = (math.Random().nextDouble() * 0xFFFFFF).toInt();
@@ -140,6 +245,11 @@ class CanvasController extends GetxController {
       return;
     }
     if (type == CanvasItemType.IMAGE) {
+      // var size = ImageSizeGetter.getSize(FileInput(File(data)));
+      // logKey('size Image height', size.height);
+      // logKey('size Image width', size.width);
+      var key = GlobalKey();
+      listGlobalKey.add(key);
       widgetsData.add(
         CanvasItemModels(
           type: type,
@@ -157,7 +267,26 @@ class CanvasController extends GetxController {
           matrixRotaion: Matrix4.identity().storage,
         ).toJson(),
       );
+      await Future.delayed(Duration(milliseconds: 500));
+      // logKey('_size', _size);
+      var index = widgetsData.length - 1;
+      var defSize = getDefaultSize(key);
+
+      var diffWidth = defSize['width'] - defSize['width'];
+      var diffHeight = defSize['height'] - defSize['height'];
+
+      // logKey('diffHeight', diffHeight);
+
+      widgetsData[index]['default_height'] = defSize['height'];
+      widgetsData[index]['default_width'] = defSize['width'];
+
+      widgetsData[index]['top_edge'] = widgetsData[index]['dy'] - (diffHeight / 2);
+      widgetsData[index]['bottom_edge'] = widgetsData[index]['top_edge'] + defSize['height'];
+      widgetsData[index]['left_edge'] = widgetsData[index]['dx'] + (diffWidth / 2);
+      widgetsData[index]['right_edge'] = widgetsData[index]['left_edge'] + defSize['width'];
+      widgetsData.refresh();
       saveState();
+      logKey('asd', widgetsData[index]);
       return;
     }
     if (type == CanvasItemType.TEXT) {
@@ -221,7 +350,8 @@ class CanvasController extends GetxController {
   bool checkEditMode() {
     var isEditModeExist = false;
     for (var i = 0; i < widgetsData.length; i++) {
-      if (widgetsData[i]['edit_mode']) {
+      logKey('checkEditMode', widgetsData[i]);
+      if (widgetsData[i]['type'] != CanvasItemType.BRUSH_BASE && widgetsData[i]['edit_mode']) {
         isEditModeExist = true;
         break;
       }
@@ -232,7 +362,7 @@ class CanvasController extends GetxController {
   int getIndexActiveEditMode() {
     int index = -1;
     for (var i = 0; i < widgetsData.length; i++) {
-      if (widgetsData[i]['edit_mode']) {
+      if (widgetsData[i]['edit_mode'] ?? false) {
         index = i;
         break;
       }
@@ -266,6 +396,176 @@ class CanvasController extends GetxController {
     widgetsData[activeIndex]['edit_mode'] = false;
     objectEditMode.value = false;
     widgetsData.refresh();
+  }
+
+  void moveTo({bool top = false}) {
+    var idx = getIndexActiveEditMode();
+    // widgetsData[idx]['dx'] = -4.246036343633492;
+    // widgetsData[idx]['dy'] = 45.278549268794464;
+    // widgetsData[idx]['matrix'][12] = -4.246036343633492;
+    // widgetsData[idx]['matrix'][13] = 45.278549268794464;
+    widgetsData[idx]['dx'] = 0.0;
+    widgetsData[idx]['dy'] = 0.0;
+    widgetsData[idx]['matrix'][12] = 0.0;
+    widgetsData[idx]['matrix'][13] = 0.0;
+    widgetsData.refresh();
+  }
+
+  void resetRotation() {
+    var idx = getIndexActiveEditMode();
+    var temp = CanvasItemModels.fromJson(widgetsData[idx]).obs;
+    if (temp.value.rotation == 0) {
+      return;
+    }
+
+    var newRotation = vm.radians(0);
+
+    widgetsData[idx]['rotation'] = newRotation;
+    widgetsData.refresh();
+    saveState();
+    // var zxc = Matrix4Transform.from(Matrix4.fromFloat64List(temp.value.matrix)).rotate(
+    //   -temp.value.rotation,
+    //   origin: Offset(
+    //     Get.width / 2,
+    //     Get.height / 2,
+    //   ),
+    // );
+    // var decompose = MxGestureDetector.decomposeToValues(zxc.matrix4);
+    // widgetsData[idx]['matrix'] = zxc.matrix4.storage;
+    // widgetsData[idx]['dx'] = decompose.translation.dx;
+    // widgetsData[idx]['dy'] = decompose.translation.dy;
+    // widgetsData[idx]['scale'] = decompose.scale;
+    // widgetsData[idx]['rotation'] = decompose.rotation;
+    // widgetsData[idx]['matrix'] = zxc.matrix4.storage;
+    // widgetsData[idx]['imageWidgetBool'] = true;
+    // widgetsData.refresh();
+    // saveState();
+  }
+
+  void rotation45Degree() {
+    var idx = getIndexActiveEditMode();
+    var temp = CanvasItemModels.fromJson(widgetsData[idx]).obs;
+
+    var zxc = Matrix4Transform.from(Matrix4.fromFloat64List(temp.value.matrix)).rotateDegrees(
+      45,
+      origin: Offset(
+        Get.width / 2 - 30,
+        Get.height / 2,
+      ),
+    );
+    logKey('check size', Get.size.width);
+
+    var newRotation = vm.radians(45);
+
+    widgetsData[idx]['rotation'] += newRotation;
+    widgetsData.refresh();
+    saveState();
+
+    // var decompose = MxGestureDetector.decomposeToValues(zxc.matrix4);
+    // widgetsData[idx]['matrix'] = zxc.matrix4.storage;
+    // widgetsData[idx]['dx'] = decompose.translation.dx;
+    // widgetsData[idx]['dy'] = decompose.translation.dy;
+    // widgetsData[idx]['scale'] = decompose.scale;
+    // widgetsData[idx]['rotation'] = decompose.rotation;
+    // widgetsData[idx]['imageWidgetBool'] = true;
+    // widgetsData.refresh();
+    // saveState();
+  }
+
+  void cropImage() async {
+    var idx = getIndexActiveEditMode();
+    var data = ImageWidgetDataModels.fromJson(widgetsData[idx]['data']);
+    var file = await ImageCropper().cropImage(
+      sourcePath: data.path,
+    );
+    if (file != null) {
+      widgetsData[idx]['data'] = ImageWidgetDataModels(path: file.path).toJson();
+      widgetsData.refresh();
+      saveState();
+    }
+    logKey('cropImage File', file!.path);
+  }
+
+  getSize(int index) {
+    // var idx = getIndexActiveEditMode();
+    final RenderBox a = listGlobalKey[index].currentContext!.findRenderObject()! as RenderBox;
+    if (widgetsData[index]['scale'] != 0) {
+      var width = a.size.width * widgetsData[index]['scale'];
+      var height = a.size.height * widgetsData[index]['scale'];
+      return {
+        'width': width,
+        'height': height,
+      };
+    } else {
+      return {
+        'width': a.size.width,
+        'height': a.size.height,
+      };
+    }
+  }
+
+  Map getDefaultSize(GlobalKey key) {
+    final RenderBox a = key.currentContext!.findRenderObject()! as RenderBox;
+    return {
+      "height": a.size.height,
+      "width": a.size.width,
+    };
+  }
+
+  void testSameMatrix() {
+    for (var i = 0; i < widgetsData.length; i++) {
+      if (i == 1) {
+        widgetsData[i]['dx'] = 6.660810939260628 + (165.8260315421728 / 2);
+        widgetsData[i]['dy'] = 98.34873449466522 + (221.10137538956377 / 2);
+        widgetsData[i]['scale'] = 0.637792429008357;
+        widgetsData[i]['matrix'] = [
+          0.6377924290083578,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.6377924290083578,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          1.0,
+          0.0,
+          6.660810939260628 + (165.8260315421728 / 2),
+          98.34873449466522 - (221.10137538956377 / 2),
+          0.0,
+          1.0,
+        ];
+        break;
+      }
+      widgetsData[i]['dx'] = 6.660810939260628;
+      widgetsData[i]['dy'] = 98.34873449466522;
+      widgetsData[i]['scale'] = 0.637792429008357;
+      widgetsData[i]['matrix'] = [
+        0.6377924290083578,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.6377924290083578,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        1.0,
+        0.0,
+        6.660810939260628,
+        98.34873449466522,
+        0.0,
+        1.0,
+      ];
+    }
+    widgetsData.refresh();
+  }
+
+  void anotherTest() {
+    RenderBox? renderBox = keyRed.currentContext!.findRenderObject() as RenderBox;
+    logKey('size', renderBox.size.width);
   }
 
   //* brush functions
@@ -468,7 +768,6 @@ class CanvasController extends GetxController {
       return;
     }
     Map prevStateData = json.decode(undoStates.last);
-    logKey('prevState', prevStateData);
     List state = prevStateData['state'];
     if (prevStateData['type'] == CanvasItemType.BRUSH) {
       drawPoint.clear();
@@ -494,7 +793,10 @@ class CanvasController extends GetxController {
       return;
     }
     widgetsData.assignAll(prevStateData['state']);
-    // logKey('undo check edit mode', checkEditMode());
+    var different = listGlobalKey.length - widgetsData.length;
+    for (var i = 0; i < different; i++) {
+      listGlobalKey.removeLast();
+    }
     objectEditMode.value = checkEditMode();
   }
 
@@ -520,7 +822,15 @@ class CanvasController extends GetxController {
       return;
     }
     widgetsData.clear();
+    var key = GlobalKey();
+    listGlobalKey.add(key);
     widgetsData.assignAll(tempStateData['state']);
+    if (listGlobalKey.length > widgetsData.length) {
+      listGlobalKey.removeLast();
+    }
+    // for (var i = 0; i < different; i++) {
+    //   listGlobalKey.add(key);
+    // }
     redoStates.removeLast();
     objectEditMode.value = checkEditMode();
     saveState();

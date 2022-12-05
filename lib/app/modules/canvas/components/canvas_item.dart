@@ -38,84 +38,96 @@ class CanvasItem extends GetView<CanvasController> {
     if (controller.widgetsData[index]['type'] == CanvasItemType.IMAGE) {
       var data = ImageWidgetDataModels.fromJson(controller.widgetsData[index]['data']);
       File imageFile = File.fromUri(Uri.parse(data.path));
-
+      // var a = imageFile.readAsBytesSync();
       return Obx(
-        () => IgnorePointer(
-          ignoring: controller.botNavIndex.value == 4,
-          child: Stack(
-            clipBehavior: Clip.none,
-            children: [
-              Container(
-                constraints: BoxConstraints(
-                  maxHeight: 450,
-                ),
-                child: Image.file(
-                  imageFile,
-                ),
-              ),
-              Visibility(
-                visible: controller.widgetsData[index]['edit_mode'],
-                child: Positioned(
-                  right: -10,
-                  top: -10,
-                  child: GestureDetector(
-                    onTap: () {
-                      logKey('rotate onTap');
-                      controller.widgetsData[index]['can_rotate'] = !controller.widgetsData[index]['can_rotate'];
-                      controller.widgetsData.refresh();
+        () {
+          return IgnorePointer(
+            ignoring: controller.botNavIndex.value == 4,
+            child: Stack(
+              clipBehavior: Clip.none,
+              children: [
+                Container(
+                  key: controller.listGlobalKey[index],
+                  constraints: BoxConstraints(
+                    maxHeight: 400,
+                    maxWidth: Get.width - 100,
+                    // minHeight: 400,
+                    // minWidth: Get.width - 100,
+                  ),
+                  child: Image.file(
+                    imageFile,
+                    opacity: index == 1 ? AlwaysStoppedAnimation(.5) : null,
+                    gaplessPlayback: true,
+                    frameBuilder: (context, child, frame, wasSynchronouslyLoaded) {
+                      return child;
                     },
-                    child: Material(
-                      elevation: 5,
-                      shape: CircleBorder(),
-                      child: Container(
-                        height: 35,
-                        width: 35,
-                        padding: EdgeInsets.all(5),
-                        decoration: BoxDecoration(
-                          color: controller.widgetsData[index]['can_rotate'] ? kBgWhite : kInactiveColor,
-                          shape: BoxShape.circle,
-                        ),
-                        child: Image.asset(
-                          'assets/icons/rotate.png',
+                    // fit: BoxFit.cover,
+                  ),
+                ),
+                Visibility(
+                  visible: controller.widgetsData[index]['edit_mode'],
+                  child: Positioned(
+                    right: -10,
+                    top: -10,
+                    child: GestureDetector(
+                      onTap: () {
+                        logKey('rotate onTap');
+                        controller.widgetsData[index]['can_rotate'] = !controller.widgetsData[index]['can_rotate'];
+                        controller.widgetsData.refresh();
+                      },
+                      child: Material(
+                        elevation: 5,
+                        shape: CircleBorder(),
+                        child: Container(
+                          height: 35,
+                          width: 35,
+                          padding: EdgeInsets.all(5),
+                          decoration: BoxDecoration(
+                            color: controller.widgetsData[index]['can_rotate'] ? kBgWhite : kInactiveColor,
+                            shape: BoxShape.circle,
+                          ),
+                          child: Image.asset(
+                            'assets/icons/rotate.png',
+                          ),
                         ),
                       ),
                     ),
                   ),
                 ),
-              ),
-              Visibility(
-                visible: controller.widgetsData[index]['edit_mode'],
-                child: Positioned(
-                  right: -10,
-                  bottom: -10,
-                  child: GestureDetector(
-                    onTap: () {
-                      logKey('resize onTap');
-                      controller.widgetsData[index]['can_resize'] = !controller.widgetsData[index]['can_resize'];
-                      controller.widgetsData.refresh();
-                    },
-                    child: Material(
-                      elevation: 5,
-                      shape: CircleBorder(),
-                      child: Container(
-                        height: 35,
-                        width: 35,
-                        padding: EdgeInsets.all(5),
-                        decoration: BoxDecoration(
-                          color: controller.widgetsData[index]['can_resize'] ? kBgWhite : kInactiveColor,
-                          shape: BoxShape.circle,
-                        ),
-                        child: Image.asset(
-                          'assets/icons/resize.png',
+                Visibility(
+                  visible: controller.widgetsData[index]['edit_mode'],
+                  child: Positioned(
+                    right: -10,
+                    bottom: -10,
+                    child: GestureDetector(
+                      onTap: () {
+                        logKey('resize onTap');
+                        controller.widgetsData[index]['can_resize'] = !controller.widgetsData[index]['can_resize'];
+                        controller.widgetsData.refresh();
+                      },
+                      child: Material(
+                        elevation: 5,
+                        shape: CircleBorder(),
+                        child: Container(
+                          height: 35,
+                          width: 35,
+                          padding: EdgeInsets.all(5),
+                          decoration: BoxDecoration(
+                            color: controller.widgetsData[index]['can_resize'] ? kBgWhite : kInactiveColor,
+                            shape: BoxShape.circle,
+                          ),
+                          child: Image.asset(
+                            'assets/icons/resize.png',
+                          ),
                         ),
                       ),
                     ),
                   ),
                 ),
-              ),
-            ],
-          ),
-        ),
+              ],
+            ),
+          );
+        },
       );
     }
     // Opaque targets can be hit by hit tests, causing them to both receive events within their bounds and prevent targets visually behind them from also receiving events.
