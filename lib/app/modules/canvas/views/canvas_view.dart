@@ -33,7 +33,7 @@ class CanvasView extends GetView<CanvasController> {
         appBar: AppBar(
           leading: InkWell(
             onTap: () {
-              controller.drawPoint.clear();
+              Get.back();
             },
             child: Icon(
               Icons.arrow_back,
@@ -77,6 +77,40 @@ class CanvasView extends GetView<CanvasController> {
             ],
           ),
           actions: [
+            Row(
+              children: [
+                Material(
+                  child: InkWell(
+                    onTap: () {
+                      controller.testPublish();
+                    },
+                    child: Container(
+                      height: 28,
+                      width: 75,
+                      decoration: BoxDecoration(
+                        border: Border.all(
+                          color: kBgBlack,
+                        ),
+                      ),
+                      child: Center(
+                        child: Row(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            DefText('Publish').normal,
+                            SizedBox(width: 5),
+                            Icon(
+                              Icons.check,
+                              color: kBgBlack,
+                              size: 10,
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
+                  ),
+                ),
+              ],
+            ),
             Obx(
               () => Visibility(
                 visible: controller.isTextEditMode.value || controller.objectEditMode.value,
@@ -124,24 +158,24 @@ class CanvasView extends GetView<CanvasController> {
           ],
         ),
         //* floating button
-        floatingActionButton: FloatingActionButton(
-          onPressed: () {
-            var idx = controller.getIndexActiveEditMode();
-            controller.widgetsData[1]['scale'] = 1.0;
-            var size = controller.getSize(1);
-            var x = 347.6143973214286;
-            var y = 141.36160714285705;
-            var diffWidth = controller.widgetsData[1]['default_width'] - size['width'];
-            logKey('diffWidth float', diffWidth);
-            var diffHeight = controller.widgetsData[1]['default_height'] - size['height'];
-            controller.widgetsData[1]['dx'] = x - (diffWidth / 2) - size['width'];
-            controller.widgetsData[1]['configDx'] = x - (diffWidth / 2);
-            controller.widgetsData[1]['dy'] = y - (diffHeight / 2);
-            controller.widgetsData[1]['configDy'] = y - (diffHeight / 2);
-            controller.widgetsData.refresh();
-            logKey('data', controller.widgetsData);
-          },
-        ),
+        // floatingActionButton: FloatingActionButton(
+        //   onPressed: () {
+        //     var idx = controller.getIndexActiveEditMode();
+        //     controller.widgetsData[1]['scale'] = 1.0;
+        //     var size = controller.getSize(1);
+        //     var x = 347.6143973214286;
+        //     var y = 141.36160714285705;
+        //     var diffWidth = controller.widgetsData[1]['default_width'] - size['width'];
+        //     logKey('diffWidth float', diffWidth);
+        //     var diffHeight = controller.widgetsData[1]['default_height'] - size['height'];
+        //     controller.widgetsData[1]['dx'] = x - (diffWidth / 2) - size['width'];
+        //     controller.widgetsData[1]['configDx'] = x - (diffWidth / 2);
+        //     controller.widgetsData[1]['dy'] = y - (diffHeight / 2);
+        //     controller.widgetsData[1]['configDy'] = y - (diffHeight / 2);
+        //     controller.widgetsData.refresh();
+        //     logKey('data', controller.widgetsData);
+        //   },
+        // ),
         // floatingActionButtonLocation: FloatingActionButtonLocation.endTop,
         body: Container(
           width: Get.width,

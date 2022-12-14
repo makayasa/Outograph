@@ -56,7 +56,7 @@ class CanvasItem extends GetView<CanvasController> {
                   ),
                   child: Image.file(
                     imageFile,
-                    opacity: index == 1 ? AlwaysStoppedAnimation(.5) : null,
+                    // opacity: index == 1 ? AlwaysStoppedAnimation(.5) : null,
                     gaplessPlayback: true,
                     frameBuilder: (context, child, frame, wasSynchronouslyLoaded) {
                       return child;
@@ -69,25 +69,28 @@ class CanvasItem extends GetView<CanvasController> {
                   child: Positioned(
                     right: -10,
                     top: -10,
-                    child: GestureDetector(
-                      onTap: () {
-                        logKey('rotate onTap');
-                        controller.widgetsData[index]['can_rotate'] = !controller.widgetsData[index]['can_rotate'];
-                        controller.widgetsData.refresh();
-                      },
-                      child: Material(
-                        elevation: 5,
-                        shape: CircleBorder(),
-                        child: Container(
-                          height: 35,
-                          width: 35,
-                          padding: EdgeInsets.all(5),
-                          decoration: BoxDecoration(
-                            color: controller.widgetsData[index]['can_rotate'] ? kBgWhite : kInactiveColor,
-                            shape: BoxShape.circle,
-                          ),
-                          child: Image.asset(
-                            'assets/icons/rotate.png',
+                    child: Transform.scale(
+                      scale: 1 / controller.widgetsData[index]['scale'],
+                      child: GestureDetector(
+                        onTap: () {
+                          logKey('rotate onTap');
+                          controller.widgetsData[index]['can_rotate'] = !controller.widgetsData[index]['can_rotate'];
+                          controller.widgetsData.refresh();
+                        },
+                        child: Material(
+                          elevation: 5,
+                          shape: CircleBorder(),
+                          child: Container(
+                            height: 35,
+                            width: 35,
+                            padding: EdgeInsets.all(5),
+                            decoration: BoxDecoration(
+                              color: controller.widgetsData[index]['can_rotate'] ? kBgWhite : kInactiveColor,
+                              shape: BoxShape.circle,
+                            ),
+                            child: Image.asset(
+                              'assets/icons/rotate.png',
+                            ),
                           ),
                         ),
                       ),
@@ -99,25 +102,28 @@ class CanvasItem extends GetView<CanvasController> {
                   child: Positioned(
                     right: -10,
                     bottom: -10,
-                    child: GestureDetector(
-                      onTap: () {
-                        logKey('resize onTap');
-                        controller.widgetsData[index]['can_resize'] = !controller.widgetsData[index]['can_resize'];
-                        controller.widgetsData.refresh();
-                      },
-                      child: Material(
-                        elevation: 5,
-                        shape: CircleBorder(),
-                        child: Container(
-                          height: 35,
-                          width: 35,
-                          padding: EdgeInsets.all(5),
-                          decoration: BoxDecoration(
-                            color: controller.widgetsData[index]['can_resize'] ? kBgWhite : kInactiveColor,
-                            shape: BoxShape.circle,
-                          ),
-                          child: Image.asset(
-                            'assets/icons/resize.png',
+                    child: Transform.scale(
+                      scale: 1 / controller.widgetsData[index]['scale'],
+                      child: GestureDetector(
+                        onTap: () {
+                          logKey('resize onTap');
+                          controller.widgetsData[index]['can_resize'] = !controller.widgetsData[index]['can_resize'];
+                          controller.widgetsData.refresh();
+                        },
+                        child: Material(
+                          elevation: 5,
+                          shape: CircleBorder(),
+                          child: Container(
+                            height: 35,
+                            width: 35,
+                            padding: EdgeInsets.all(5),
+                            decoration: BoxDecoration(
+                              color: controller.widgetsData[index]['can_resize'] ? kBgWhite : kInactiveColor,
+                              shape: BoxShape.circle,
+                            ),
+                            child: Image.asset(
+                              'assets/icons/resize.png',
+                            ),
                           ),
                         ),
                       ),
@@ -134,18 +140,90 @@ class CanvasItem extends GetView<CanvasController> {
     // Translucent targets both receive events within their bounds and permit targets visually behind them to also receive events.
     if (controller.widgetsData[index]['type'] == CanvasItemType.GIF) {
       var data = GifWidgetDataModels.fromJson(controller.widgetsData[index]['data']);
-      return Container(
-        child: CachedNetworkImage(
-          // imageUrl: controller.widgetsData[index]['data']['url'],
-          imageUrl: data.url,
-          httpHeaders: {'accept': 'image/*'},
-          placeholder: (context, url) {
-            return DefaultPlaceholder(
-              height: 70,
-              width: 70,
-            );
-          },
-        ),
+      return Stack(
+        clipBehavior: Clip.none,
+        children: [
+          Container(
+            key: controller.listGlobalKey[index],
+            child: CachedNetworkImage(
+              // imageUrl: controller.widgetsData[index]['data']['url'],
+              imageUrl: data.url,
+              httpHeaders: {'accept': 'image/*'},
+              placeholder: (context, url) {
+                return DefaultPlaceholder(
+                  height: 70,
+                  width: 70,
+                );
+              },
+            ),
+          ),
+          Visibility(
+            visible: controller.widgetsData[index]['edit_mode'],
+            child: Positioned(
+              right: -10,
+              top: -10,
+              child: Transform.scale(
+                scale: 1 / controller.widgetsData[index]['scale'],
+                child: GestureDetector(
+                  onTap: () {
+                    logKey('rotate onTap');
+                    controller.widgetsData[index]['can_rotate'] = !controller.widgetsData[index]['can_rotate'];
+                    controller.widgetsData.refresh();
+                  },
+                  child: Material(
+                    elevation: 5,
+                    shape: CircleBorder(),
+                    child: Container(
+                      height: 35,
+                      width: 35,
+                      padding: EdgeInsets.all(5),
+                      decoration: BoxDecoration(
+                        color: controller.widgetsData[index]['can_rotate'] ? kBgWhite : kInactiveColor,
+                        shape: BoxShape.circle,
+                      ),
+                      child: Image.asset(
+                        'assets/icons/rotate.png',
+                      ),
+                    ),
+                  ),
+                ),
+              ),
+            ),
+          ),
+          Visibility(
+            visible: controller.widgetsData[index]['edit_mode'],
+            child: Positioned(
+              right: -10,
+              bottom: -10,
+              child: Transform.scale(
+                scale: 1 / controller.widgetsData[index]['scale'],
+                child: GestureDetector(
+                  onTap: () {
+                    logKey('resize onTap');
+                    controller.widgetsData[index]['can_resize'] = !controller.widgetsData[index]['can_resize'];
+                    controller.widgetsData.refresh();
+                  },
+                  child: Material(
+                    elevation: 5,
+                    shape: CircleBorder(),
+                    child: Container(
+                      height: 35,
+                      width: 35,
+                      padding: EdgeInsets.all(5),
+                      decoration: BoxDecoration(
+                        color: controller.widgetsData[index]['can_resize'] ? kBgWhite : kInactiveColor,
+                        shape: BoxShape.circle,
+                      ),
+                      child: Image.asset(
+                        'assets/icons/resize.png',
+                      ),
+                    ),
+                  ),
+                ),
+              ),
+            ),
+          ),
+        ],
       );
     }
     if (controller.widgetsData[index]['type'] == CanvasItemType.TEXT) {

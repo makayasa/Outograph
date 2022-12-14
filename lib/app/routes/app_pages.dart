@@ -4,6 +4,8 @@ import 'package:outograph/app/modules/canvas/bindings/canvas_binding.dart';
 import 'package:outograph/app/modules/canvas/views/canvas_view.dart';
 import 'package:outograph/app/modules/home/bindings/home_binding.dart';
 import 'package:outograph/app/modules/home/views/home_view.dart';
+import 'package:outograph/app/modules/timeline/bindings/timeline_binding.dart';
+import 'package:outograph/app/modules/timeline/views/timeline_view.dart';
 
 part 'app_routes.dart';
 
@@ -22,6 +24,11 @@ class AppPages {
       name: _Paths.CANVAS,
       page: () => CanvasView(),
       binding: CanvasBinding(),
+    ),
+    GetPage(
+      name: _Paths.TIMELINE,
+      page: () => TimelineView(),
+      binding: TimelineBinding(),
     ),
   ];
 }

@@ -92,11 +92,32 @@ class CanvasController extends GetxController {
   @override
   void onClose() {
     super.onClose();
-    imageScrollController.dispose();
+    // imageScrollController.dispose();
+    textScrolLController.dispose();
     keyboardSubscription.cancel();
   }
 
   //* functions
+
+  void testPublish() async {
+    List temp = box.read('canvas') ?? [];
+    for (var element in widgetsData) {
+      if (element['type'] == CanvasItemType.BRUSH_BASE) {
+        element['data'] = {'drawpoint': drawPoint};
+        break;
+      }
+    }
+    var data = {
+      'caption': 'test ${temp.length}',
+      'canvas': widgetsData,
+    };
+    temp.add(data);
+    await box.write('canvas', temp);
+    if (panelImageController.isPanelOpen) {
+      await closeImage();
+    }
+    Get.back();
+  }
 
   void botNavTap(int index) {
     if (panelImageController.isPanelShown) {
@@ -123,7 +144,7 @@ class CanvasController extends GetxController {
     for (var i = 0; i < widgetsData.length; i++) {
       var activeItem = CanvasItemModels.fromJson(widgetsData[index]);
       var compareItem = CanvasItemModels.fromJson(widgetsData[i]);
-      if (i != index) {
+      if (i != index && compareItem.type != CanvasItemType.BRUSH_BASE && compareItem.type != CanvasItemType.BRUSH) {
         var size = getSize(index);
         var diffWidth = widgetsData[index]['default_width'] - size['width'];
         var diffHeight = widgetsData[index]['default_height'] - size['height'];
@@ -225,29 +246,43 @@ class CanvasController extends GetxController {
       return;
     }
     if (type == CanvasItemType.BRUSH_BASE) {
+      var key = GlobalKey();
+      listGlobalKey.add(key);
       widgetsData.add(
-        {
-          'type': type,
-          'data': data,
-          'imageWidgetBool': false,
-          'dx': 0.0,
-          'dy': 0.0,
-          'scale': 1.0,
-          'rotation': 0.0,
-          'color': color,
-          'matrix': Matrix4.identity().storage,
-          'matrix_translation': Matrix4.identity().storage,
-          'matrix_scale': Matrix4.identity().storage,
-          'matrix_rotation': Matrix4.identity().storage,
-        },
+        CanvasItemModels(
+          type: type,
+          data: {},
+          imageWidgetBool: false,
+          editMode: false,
+          canRotate: false,
+          canResize: false,
+          color: color,
+          matrix: Matrix4.identity().storage,
+          matrixTranslation: Matrix4.identity().storage,
+          matrixScale: Matrix4.identity().storage,
+          matrixRotaion: Matrix4.identity().storage,
+        ).toJson(),
       );
+      // widgetsData.add(
+      //   {
+      //     'type': type,
+      //     'data': data,
+      //     'imageWidgetBool': false,
+      //     'dx': 0.0,
+      //     'dy': 0.0,
+      //     'scale': 1.0,
+      //     'rotation': 0.0,
+      //     'color': color,
+      //     'matrix': Matrix4.identity().storage,
+      //     'matrix_translation': Matrix4.identity().storage,
+      //     'matrix_scale': Matrix4.identity().storage,
+      //     'matrix_rotation': Matrix4.identity().storage,
+      //   },
+      // );
       saveState(type: CanvasItemType.BRUSH);
       return;
     }
     if (type == CanvasItemType.IMAGE) {
-      // var size = ImageSizeGetter.getSize(FileInput(File(data)));
-      // logKey('size Image height', size.height);
-      // logKey('size Image width', size.width);
       var key = GlobalKey();
       listGlobalKey.add(key);
       widgetsData.add(
@@ -268,25 +303,18 @@ class CanvasController extends GetxController {
         ).toJson(),
       );
       await Future.delayed(Duration(milliseconds: 500));
-      // logKey('_size', _size);
       var index = widgetsData.length - 1;
       var defSize = getDefaultSize(key);
-
       var diffWidth = defSize['width'] - defSize['width'];
       var diffHeight = defSize['height'] - defSize['height'];
-
-      // logKey('diffHeight', diffHeight);
-
       widgetsData[index]['default_height'] = defSize['height'];
       widgetsData[index]['default_width'] = defSize['width'];
-
       widgetsData[index]['top_edge'] = widgetsData[index]['dy'] - (diffHeight / 2);
       widgetsData[index]['bottom_edge'] = widgetsData[index]['top_edge'] + defSize['height'];
       widgetsData[index]['left_edge'] = widgetsData[index]['dx'] + (diffWidth / 2);
       widgetsData[index]['right_edge'] = widgetsData[index]['left_edge'] + defSize['width'];
       widgetsData.refresh();
       saveState();
-      logKey('asd', widgetsData[index]);
       return;
     }
     if (type == CanvasItemType.TEXT) {
@@ -309,7 +337,8 @@ class CanvasController extends GetxController {
       return;
     }
     if (type == CanvasItemType.GIF) {
-      logKey('masuk tipe gif');
+      var key = GlobalKey();
+      listGlobalKey.add(key);
       widgetsData.add(
         CanvasItemModels(
           type: type,
@@ -325,26 +354,21 @@ class CanvasController extends GetxController {
           matrixRotaion: Matrix4.identity().storage,
         ).toJson(),
       );
+      await Future.delayed(Duration(milliseconds: 500));
+      var index = widgetsData.length - 1;
+      var defSize = getDefaultSize(key);
+      var diffWidth = defSize['width'] - defSize['width'];
+      var diffHeight = defSize['height'] - defSize['height'];
+      widgetsData[index]['default_height'] = defSize['height'];
+      widgetsData[index]['default_width'] = defSize['width'];
+      widgetsData[index]['top_edge'] = widgetsData[index]['dy'] - (diffHeight / 2);
+      widgetsData[index]['bottom_edge'] = widgetsData[index]['top_edge'] + defSize['height'];
+      widgetsData[index]['left_edge'] = widgetsData[index]['dx'] + (diffWidth / 2);
+      widgetsData[index]['right_edge'] = widgetsData[index]['left_edge'] + defSize['width'];
+      widgetsData.refresh();
       saveState();
       return;
     }
-    // widgetsData.add(
-    //   {
-    //     'type': type,
-    //     'data': data,
-    //     'imageWidgetBool': false,
-    //     'dx': 0.0,
-    //     'dy': 0.0,
-    //     'scale': 1.0,
-    //     'rotation': 0.0,
-    //     'color': color,
-    //     'matrix': Matrix4.identity().storage,
-    //     'matrix_translation': Matrix4.identity().storage,
-    //     'matrix_scale': Matrix4.identity().storage,
-    //     'matrix_rotation': Matrix4.identity().storage,
-    //   },
-    // );
-    // saveState();
   }
 
   bool checkEditMode() {
@@ -744,7 +768,6 @@ class CanvasController extends GetxController {
       return;
     }
     if (type == CanvasItemType.BRUSH) {
-      logKey('brush saveState', drawPoint.length);
       var _tempBrush = {
         'type': type,
         'state': json.decode(drawPoint.toString()),
