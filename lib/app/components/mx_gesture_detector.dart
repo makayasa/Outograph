@@ -4,7 +4,7 @@ import 'dart:math';
 
 import 'package:flutter/widgets.dart';
 
-import '../../utils/function_utils.dart';
+import '../utils/function_utils.dart';
 
 typedef _OnUpdate<T> = T Function(T oldValue, T newValue);
 

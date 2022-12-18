@@ -17,9 +17,9 @@ import 'package:outograph/app/modules/canvas/components/text_editing_items.dart'
 import 'package:outograph/app/modules/canvas/components/text_editing_line_height.dart';
 import 'package:sliding_up_panel/sliding_up_panel.dart';
 
-import '../../../../utils/function_utils.dart';
 import '../../../models/canvas_widget_model.dart';
 import '../../../models/text_widget_data_models.dart';
+import '../../../utils/function_utils.dart';
 import '../components/canvas_botnavbar_item.dart';
 import '../components/canvas_images_list.dart';
 import '../components/canvas_item.dart';

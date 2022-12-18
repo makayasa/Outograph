@@ -14,7 +14,7 @@ import 'package:outograph/app/models/draw_pont.dart';
 import 'package:outograph/app/models/gif_widget_data_models.dart';
 import 'package:outograph/app/models/image_widget_data_models.dart';
 import 'package:outograph/app/modules/canvas/controllers/canvas_controller.dart';
-import 'package:outograph/utils/function_utils.dart';
+import 'package:outograph/app/utils/function_utils.dart';
 
 import '../../../models/text_widget_data_models.dart';
 

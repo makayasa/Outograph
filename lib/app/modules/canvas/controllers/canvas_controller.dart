@@ -21,10 +21,10 @@ import 'package:photo_manager/photo_manager.dart';
 import 'package:sliding_up_panel/sliding_up_panel.dart';
 import 'package:vector_math/vector_math.dart' as vm;
 
-import '../../../../utils/function_utils.dart';
 import '../../../components/default_text.dart';
 import '../../../config/constants.dart';
 import '../../../models/gif_widget_data_models.dart';
+import '../../../utils/function_utils.dart';
 
 class CanvasController extends GetxController {
   GlobalKey keyRed = GlobalKey();
