@@ -19,7 +19,7 @@ class TextEditingFontStyle extends GetView<CanvasController> {
   Widget build(BuildContext context) {
     return Obx(
       () {
-        var data = TextWidgetDataModels.fromJson(controller.widgetsData[idx]['data']).obs;
+        var data = TextWidgetDataModelsOld.fromJson(controller.widgetsData[idx]['data']).obs;
         return Container(
           child: Center(
             child: Row(

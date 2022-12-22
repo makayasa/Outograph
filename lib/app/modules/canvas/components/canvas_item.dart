@@ -228,7 +228,7 @@ class CanvasItem extends GetView<CanvasController> {
     }
     if (controller.widgetsData[index]['type'] == CanvasItemType.TEXT) {
       // var canvas = CanvasItemModels.fromJson(controller.widgetsData[index]);
-      var data = TextWidgetDataModels.fromJson(controller.widgetsData[index]['data']).obs;
+      var data = TextWidgetDataModelsOld.fromJson(controller.widgetsData[index]['data']).obs;
       return GetX<CanvasController>(
         init: CanvasController(),
         builder: (ctrl) {

@@ -962,7 +962,7 @@ class CanvasView extends GetView<CanvasController> {
                                   controller.addWidget(
                                     type: CanvasItemType.TEXT,
                                     // data: 'Tap to edit',
-                                    data: TextWidgetDataModels(
+                                    data: TextWidgetDataModelsOld(
                                       text: 'Tap to edit',
                                       fontSize: TextSizeHelper.ExtraLarge,
                                     ),

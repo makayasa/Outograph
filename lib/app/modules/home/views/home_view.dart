@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:outograph/app/components/default_text.dart';
 import 'package:outograph/app/routes/app_pages.dart';
+import 'package:outograph/app/utils/function_utils.dart';
 
 import '../controllers/home_controller.dart';
 
@@ -16,7 +17,12 @@ class HomeView extends GetView<HomeController> {
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: () {
-          controller.deleteTimeline();
+          // controller.deleteTimeline();
+          var a = hexToColor('#e8ba3a');
+          logKey(
+            'asd',
+            a.value,
+          );
         },
       ),
       body: SafeArea(
@@ -45,7 +51,8 @@ class HomeView extends GetView<HomeController> {
                 child: Container(
                   padding: EdgeInsets.all(10),
                   decoration: BoxDecoration(
-                    color: Colors.amber,
+                    // color: Colors.amber,
+                    color: hexToColor('#2366a6'),
                     borderRadius: BorderRadius.circular(10),
                   ),
                   child: DefText('Timeline').normal,

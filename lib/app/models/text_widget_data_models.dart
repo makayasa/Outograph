@@ -1,7 +1,7 @@
 import 'package:outograph/app/helpers/text_align_helper.dart';
 
-class TextWidgetDataModels {
-  TextWidgetDataModels({
+class TextWidgetDataModelsOld {
+  TextWidgetDataModelsOld({
     required this.text,
     required this.fontSize,
     this.lineHeight = 1,
@@ -23,8 +23,8 @@ class TextWidgetDataModels {
   String textAlign;
   int color;
 
-  factory TextWidgetDataModels.fromJson(Map<String, dynamic> json) => TextWidgetDataModels(
-        text: json['text'],
+  factory TextWidgetDataModelsOld.fromJson(Map<String, dynamic> json) => TextWidgetDataModelsOld(
+        text: json['long_text'],
         fontSize: json['fontSize'],
         lineHeight: json['lineHeight'],
         fontFamily: json['fontFamily'],
@@ -36,7 +36,7 @@ class TextWidgetDataModels {
       );
 
   Map<String, dynamic> toJson() => {
-        'text': text,
+        'long_text': text,
         'fontSize': fontSize,
         'lineHeight': lineHeight,
         'fontFamily': fontFamily,
