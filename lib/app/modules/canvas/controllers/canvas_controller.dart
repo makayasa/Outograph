@@ -119,6 +119,8 @@ class CanvasController extends GetxController {
     Get.back();
   }
 
+  void testPost() async {}
+
   void botNavTap(int index) {
     if (panelImageController.isPanelShown) {
       closeImage();
@@ -232,7 +234,6 @@ class CanvasController extends GetxController {
 
   void addWidget({String type = '', dynamic data}) async {
     redoStates.clear();
-    logKey('addWidget type', type);
     var color = (math.Random().nextDouble() * 0xFFFFFF).toInt();
     if (type == CanvasItemType.BACKGROUND) {
       widgetsData.insert(
@@ -263,22 +264,6 @@ class CanvasController extends GetxController {
           matrixRotaion: Matrix4.identity().storage,
         ).toJson(),
       );
-      // widgetsData.add(
-      //   {
-      //     'type': type,
-      //     'data': data,
-      //     'imageWidgetBool': false,
-      //     'dx': 0.0,
-      //     'dy': 0.0,
-      //     'scale': 1.0,
-      //     'rotation': 0.0,
-      //     'color': color,
-      //     'matrix': Matrix4.identity().storage,
-      //     'matrix_translation': Matrix4.identity().storage,
-      //     'matrix_scale': Matrix4.identity().storage,
-      //     'matrix_rotation': Matrix4.identity().storage,
-      //   },
-      // );
       saveState(type: CanvasItemType.BRUSH);
       return;
     }

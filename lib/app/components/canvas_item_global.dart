@@ -7,8 +7,8 @@ import 'package:outograph/app/helpers/canvas_helper.dart';
 import 'package:outograph/app/models/image_model/image_widget_model.dart';
 import 'package:outograph/app/models/text_model/text_widget_models.dart';
 
-class TimelineItem extends StatelessWidget {
-  const TimelineItem({
+class CanvasItemGlobal extends StatelessWidget {
+  const CanvasItemGlobal({
     super.key,
     required this.data,
     // required this.index,
