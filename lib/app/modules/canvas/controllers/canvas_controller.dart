@@ -15,7 +15,12 @@ import 'package:matrix4_transform/matrix4_transform.dart';
 import 'package:outograph/app/helpers/canvas_helper.dart';
 import 'package:outograph/app/models/canvas_widget_model.dart';
 import 'package:outograph/app/models/draw_pont.dart';
+import 'package:outograph/app/models/image_model/image_widget_model.dart';
 import 'package:outograph/app/models/image_widget_data_models.dart';
+import 'package:outograph/app/models/text_model/text_font_model.dart';
+import 'package:outograph/app/models/text_model/text_widget_models.dart';
+import 'package:outograph/app/models/text_widget_data_models.dart';
+import 'package:outograph/app/routes/app_pages.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:photo_manager/photo_manager.dart';
 import 'package:sliding_up_panel/sliding_up_panel.dart';
@@ -23,11 +28,13 @@ import 'package:vector_math/vector_math.dart' as vm;
 
 import '../../../components/default_text.dart';
 import '../../../config/constants.dart';
+import '../../../models/create_post_model.dart';
 import '../../../models/gif_widget_data_models.dart';
 import '../../../utils/function_utils.dart';
 
 class CanvasController extends GetxController {
   GlobalKey keyRed = GlobalKey();
+  GlobalKey canvasKey = GlobalKey();
 
   List<GlobalKey> listGlobalKey = [];
 
@@ -119,7 +126,74 @@ class CanvasController extends GetxController {
     Get.back();
   }
 
-  void testPost() async {}
+  void testPost() async {
+    List<ImageWidgetModel> images = [];
+    List<TextWidgetModels> texts = [];
+    var canvasSize = getDefaultSize(canvasKey);
+    logKey('canvacsSize', canvasSize);
+    for (var i = 0; i < widgetsData.length; i++) {
+      var dataCanvas = CanvasItemModels.fromJson(widgetsData[i]);
+      var size = getSize(i);
+      //* image
+      if (dataCanvas.type == CanvasItemType.IMAGE) {
+        var dataImageCanvas = ImageWidgetDataModels.fromJson(dataCanvas.data);
+        images.add(
+          ImageWidgetModel(
+            index: i,
+            type: dataCanvas.type,
+            url: dataImageCanvas.path,
+            x_axis: dataCanvas.dx,
+            y_axis: dataCanvas.dy,
+            rotation: dataCanvas.rotation,
+            scale: dataCanvas.scale,
+            width: size['width'],
+            height: size['height'],
+            createdAt: DateTime.now().toString(),
+          ),
+        );
+      }
+      //* text
+      else if (dataCanvas.type == CanvasItemType.TEXT) {
+        var dataText = TextWidgetDataModelsOld.fromJson(widgetsData[i]['data']);
+        var fontData = TextFontModel(
+          fontFamily: dataText.fontFamily!,
+          fontSize: dataText.fontSize!,
+          fontWeight: 0,
+          fontType: 'normal',
+          justify: dataText.textAlign,
+          lineHeight: dataText.lineHeight,
+        );
+        texts.add(
+          TextWidgetModels(
+            type: dataCanvas.type,
+            index: i,
+            font: fontData,
+            x_axis: dataCanvas.dx,
+            y_axis: dataCanvas.dy,
+            rotation: dataCanvas.rotation,
+            scale: dataCanvas.scale,
+            longText: dataText.text,
+            shortText: dataText.text,
+          ),
+        );
+      }
+    }
+    // logKey('widgetsData', widgetsData);
+    var temp = CreatePostModel(
+      width: 300,
+      height: 300,
+      gifs: [],
+      images: images,
+      texts: texts,
+      hastags: [],
+      peoples: [],
+    ).toJson();
+    Get.toNamed(
+      Routes.CANVAS_PREVIEW,
+      arguments: temp,
+    );
+    logKey('temp', temp);
+  }
 
   void botNavTap(int index) {
     if (panelImageController.isPanelShown) {
@@ -303,6 +377,8 @@ class CanvasController extends GetxController {
       return;
     }
     if (type == CanvasItemType.TEXT) {
+      var key = GlobalKey();
+      listGlobalKey.add(key);
       widgetsData.add(
         CanvasItemModels(
           type: type,

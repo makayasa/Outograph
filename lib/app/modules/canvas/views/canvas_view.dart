@@ -15,7 +15,6 @@ import 'package:outograph/app/modules/canvas/components/text_editing_font_style.
 import 'package:outograph/app/modules/canvas/components/text_editing_fonts.dart';
 import 'package:outograph/app/modules/canvas/components/text_editing_items.dart';
 import 'package:outograph/app/modules/canvas/components/text_editing_line_height.dart';
-import 'package:outograph/app/routes/app_pages.dart';
 import 'package:sliding_up_panel/sliding_up_panel.dart';
 
 import '../../../models/canvas_widget_model.dart';
@@ -84,7 +83,8 @@ class CanvasView extends GetView<CanvasController> {
                   child: InkWell(
                     onTap: () {
                       // controller.testPublish();
-                      Get.toNamed(Routes.CANVAS_PREVIEW);
+                      // Get.toNamed(Routes.CANVAS_PREVIEW);
+                      controller.testPost();
                     },
                     child: Container(
                       height: 28,
@@ -379,6 +379,7 @@ class CanvasView extends GetView<CanvasController> {
                   // //* New OverlayWidget
                   Positioned.fill(
                     child: Container(
+                      key: controller.canvasKey,
                       child: Stack(
                         fit: StackFit.expand,
                         children: controller.widgetsData

@@ -44,7 +44,7 @@ class CreatePostModel {
         'height': height,
         'gifs': gifs,
         'images': images,
-        'text': texts,
+        'texts': texts,
         'hastags': hastags,
         'peoples': peoples,
       };

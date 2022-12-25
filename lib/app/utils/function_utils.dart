@@ -3,6 +3,7 @@ import 'dart:developer' as dev;
 import 'dart:math';
 
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 
 Matrix4 translate(Offset translation) {
   var dx = translation.dx;
@@ -124,4 +125,16 @@ void toJsonA(String arg) {}
 
 Color hexToColor(String code) {
   return new Color(int.parse(code.substring(1, 7), radix: 16) + 0xFF000000);
+}
+
+void showToast(message, {bgColor, txtColor}) {
+  Fluttertoast.showToast(
+      msg: message,
+      toastLength: Toast.LENGTH_SHORT,
+      gravity: ToastGravity.BOTTOM,
+      timeInSecForIosWeb: 1,
+      backgroundColor: bgColor,
+      // ?? kPrimaryColor,
+      textColor: txtColor ?? Colors.white,
+      fontSize: 12.0);
 }

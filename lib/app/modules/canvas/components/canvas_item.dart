@@ -288,6 +288,7 @@ class CanvasItem extends GetView<CanvasController> {
             );
           } else {
             return Container(
+              key: controller.listGlobalKey[index],
               child: Text(
                 data.value.text,
                 textAlign: textAlign,

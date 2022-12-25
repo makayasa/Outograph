@@ -18,7 +18,7 @@ class GifWidgetModel {
         x_axis: json['x_axis'],
         y_axis: json['y_axis'],
         scale: json['scale'],
-        rotation: json['rotation'],
+        rotation: json['angle_rotation'],
       );
 
   Map<String, dynamic> toJson() => {
@@ -26,6 +26,6 @@ class GifWidgetModel {
         'x_axis': x_axis,
         'y_axis': y_axis,
         'scale': scale,
-        'rotation': rotation,
+        'angle_rotation': rotation,
       };
 }

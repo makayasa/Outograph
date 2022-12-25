@@ -3,6 +3,7 @@ import 'dart:math' as math;
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:outograph/app/components/canvas_item_global.dart';
+import 'package:outograph/app/utils/function_utils.dart';
 
 import '../controllers/timeline_controller.dart';
 
@@ -38,6 +39,7 @@ class TimelineView extends GetView<TimelineController> {
                           .asMap()
                           .map((idx, value) {
                             var data = items[idx];
+                            logKey('dataz', data);
                             return MapEntry(
                               idx,
                               Positioned(

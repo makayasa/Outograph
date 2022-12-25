@@ -30,6 +30,7 @@ class TimelineController extends GetxController {
     for (var i = 0; i < temp.length; i++) {
       var tempList = [];
       for (Map<String, dynamic> e in temp[i]['texts']) {
+        e['font']['font_size'] = e['font']['font_size'].toDouble();
         tempList.add(
           {
             'type': CanvasItemType.TEXT,

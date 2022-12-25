@@ -10,7 +10,7 @@ class TextFontModel {
   });
 
   String fontFamily;
-  int fontSize;
+  double fontSize;
   int fontWeight;
   // int color;
   String fontType;
