@@ -138,3 +138,11 @@ void showToast(message, {bgColor, txtColor}) {
       textColor: txtColor ?? Colors.white,
       fontSize: 12.0);
 }
+
+Map getDefaultSize(GlobalKey key) {
+  final RenderBox a = key.currentContext!.findRenderObject()! as RenderBox;
+  return {
+    "height": a.size.height,
+    "width": a.size.width,
+  };
+}

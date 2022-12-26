@@ -12,6 +12,12 @@ class ImageWidgetModel {
     this.scale = 1.0,
     this.rotation = 0.0,
     required this.createdAt,
+    required this.top_edge,
+    required this.bottom_edge,
+    required this.left_edge,
+    required this.right_edge,
+    required this.default_height,
+    required this.default_width,
   });
   int index;
   String url;
@@ -24,6 +30,14 @@ class ImageWidgetModel {
   double rotation;
   String createdAt;
 
+  //*untuk kebutuhan canvas
+  double top_edge;
+  double bottom_edge;
+  double left_edge;
+  double right_edge;
+  double default_height;
+  double default_width;
+
   factory ImageWidgetModel.fromJson(Map<String, dynamic> json) => ImageWidgetModel(
         index: json['index'],
         url: json['url'],
@@ -34,6 +48,12 @@ class ImageWidgetModel {
         scale: json['scale'].toDouble(),
         rotation: json['angle_rotation'].toDouble(),
         createdAt: json['created_at'],
+        top_edge: json['top_edge'],
+        bottom_edge: json['bottom_edge'],
+        left_edge: json['left_edge'],
+        right_edge: json['right_edge'],
+        default_height: json['default_height'],
+        default_width: json['default_width'],
       );
 
   Map<String, dynamic> toJson() => {
@@ -47,6 +67,12 @@ class ImageWidgetModel {
         "y_axis": y_axis,
         'scale': scale,
         'angle_rotation': rotation,
-        "created_at": createdAt,
+        'created_at': createdAt,
+        'top_edge': top_edge,
+        'bottom_edge': bottom_edge,
+        'left_edge': left_edge,
+        'right_edge': right_edge,
+        'default_height': default_height,
+        'default_width': default_width,
       };
 }

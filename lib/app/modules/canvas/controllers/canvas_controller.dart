@@ -127,6 +127,8 @@ class CanvasController extends GetxController {
   }
 
   void testPost() async {
+    logKey(widgetsData);
+    // return;
     List<ImageWidgetModel> images = [];
     List<TextWidgetModels> texts = [];
     var canvasSize = getDefaultSize(canvasKey);
@@ -149,6 +151,12 @@ class CanvasController extends GetxController {
             width: size['width'],
             height: size['height'],
             createdAt: DateTime.now().toString(),
+            bottom_edge: dataCanvas.bottomEdge,
+            top_edge: dataCanvas.topEdge,
+            left_edge: dataCanvas.leftEdge,
+            right_edge: dataCanvas.rightEdge,
+            default_width: widgetsData[i]['default_width'],
+            default_height: widgetsData[i]['default_height'],
           ),
         );
       }
@@ -587,14 +595,6 @@ class CanvasController extends GetxController {
         'height': a.size.height,
       };
     }
-  }
-
-  Map getDefaultSize(GlobalKey key) {
-    final RenderBox a = key.currentContext!.findRenderObject()! as RenderBox;
-    return {
-      "height": a.size.height,
-      "width": a.size.width,
-    };
   }
 
   void testSameMatrix() {
