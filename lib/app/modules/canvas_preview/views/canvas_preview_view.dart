@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:outograph/app/components/canvas_item_global.dart';
 import 'package:outograph/app/components/default_text.dart';
-import 'package:outograph/app/utils/function_utils.dart';
+import 'package:outograph/app/helpers/canvas_helper.dart';
 
 import '../../../config/constants.dart';
 import '../controllers/canvas_preview_controller.dart';
@@ -39,86 +39,117 @@ class CanvasPreviewView extends GetView<CanvasPreviewController> {
             child: Column(
               children: [
                 //* Profile
-                Container(
-                  key: controller.profileKey,
-                  decoration: BoxDecoration(
-                    color: Colors.grey,
-                  ),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      SizedBox(height: 5),
-                      //* following row
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
+                Stack(
+                  // fit: StackFit.expand,
+                  children: [
+                    Container(
+                      key: controller.profileKey,
+                      decoration: BoxDecoration(
+                          // color: Colors.grey,
+                          ),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        mainAxisSize: MainAxisSize.min,
                         children: [
-                          Column(
+                          SizedBox(height: 5),
+                          //* following row
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
                             children: [
-                              DefText('Following').normal,
-                              SizedBox(height: 5),
-                              DefText('128').normal,
+                              Column(
+                                children: [
+                                  DefText('Following').normal,
+                                  SizedBox(height: 5),
+                                  DefText(
+                                    '128',
+                                    fontWeight: FontWeight.bold,
+                                  ).semilarge,
+                                ],
+                              ),
+                              SizedBox(width: 25),
+                              Container(
+                                height: 75,
+                                width: 75,
+                                decoration: BoxDecoration(
+                                  shape: BoxShape.circle,
+                                  color: Colors.amber,
+                                ),
+                                child: CircleAvatar(
+                                  backgroundImage: AssetImage(
+                                    'assets/images/profile.png',
+                                  ),
+                                ),
+                                // child: Image.asset(
+                                //   'assets/images/default_picture.jpeg',
+                                //   fit: BoxFit.cover,
+                                // ),
+                              ),
+                              SizedBox(width: 25),
+                              Column(
+                                children: [
+                                  DefText('Followers').normal,
+                                  SizedBox(height: 5),
+                                  DefText(
+                                    '93',
+                                    fontWeight: FontWeight.bold,
+                                  ).semilarge,
+                                ],
+                              ),
                             ],
                           ),
-                          SizedBox(width: 25),
-                          Container(
-                            height: 75,
-                            width: 75,
-                            decoration: BoxDecoration(
-                              shape: BoxShape.circle,
-                              color: Colors.amber,
+                          SizedBox(height: 10),
+                          //* name
+                          DefText(
+                            'miss_chan',
+                            fontWeight: FontWeight.bold,
+                          ).normal,
+                          SizedBox(height: 10),
+                          DefText('Misa Hana Lestari').normal,
+                          SizedBox(height: 20),
+                          //* impression
+                          Padding(
+                            padding: EdgeInsets.symmetric(horizontal: 15),
+                            child: Row(
+                              children: [
+                                DefText('63 Impressions').normal,
+                                Spacer(),
+                                DefText('Post').normal,
+                              ],
                             ),
                           ),
-                          SizedBox(width: 25),
-                          Column(
-                            children: [
-                              DefText('Followers').normal,
-                              SizedBox(height: 5),
-                              DefText('128').normal,
-                            ],
+                          SizedBox(height: 10),
+                          Divider(),
+                          SizedBox(height: 10),
+                          //* Pinned, canvas, tag
+                          Container(
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceAround,
+                              children: [
+                                DefText('Pinned').normal,
+                                DefText('Canvas').normal,
+                                DefText('Tag').normal,
+                              ],
+                            ),
                           ),
+                          SizedBox(height: 15),
                         ],
                       ),
-                      SizedBox(height: 10),
-                      //* name
-                      DefText('miss_chan').normal,
-                      SizedBox(height: 10),
-                      DefText('Misa Hana Lestari').normal,
-                      SizedBox(height: 20),
-                      //* impression
-                      Padding(
-                        padding: EdgeInsets.symmetric(horizontal: 15),
-                        child: Row(
-                          children: [
-                            DefText('63 Impressions').normal,
-                            Spacer(),
-                            DefText('Post').normal,
-                          ],
-                        ),
+                    ),
+                    Positioned.fill(
+                      child: Container(
+                        height: double.infinity,
+                        color: Colors.grey.shade500.withOpacity(0.25),
                       ),
-                      SizedBox(height: 10),
-                      Divider(),
-
-                      //* Pinned, canvas, tag
-                      Container(
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceAround,
-                          children: [
-                            DefText('Pinned').normal,
-                            DefText('Canvas').normal,
-                            DefText('Tag').normal,
-                          ],
-                        ),
-                      ),
-                      SizedBox(height: 10),
-                    ],
-                  ),
+                    ),
+                  ],
                 ),
                 //* Canvas
                 Obx(
                   () => Container(
-                    height: 603.4285714285714,
-                    width: 411.42857142857144,
+                    height: Get.arguments['height'],
+                    width: Get.arguments['width'],
+                    // height: 603.4285714285714,
+                    // width: 411.42857142857144,
                     // color: Colors.amber,
                     child: Stack(
                       fit: StackFit.expand,
@@ -126,30 +157,26 @@ class CanvasPreviewView extends GetView<CanvasPreviewController> {
                           .asMap()
                           .map(
                             (idx, value) {
-                              logKey('length', controller.canvasItems.length);
                               return MapEntry(
                                 idx,
                                 Positioned(
-                                  left: controller.canvasItems[idx].x_axis,
-                                  top: controller.canvasItems[idx].y_axis,
+                                  left: controller.canvasItems[idx].type == CanvasItemType.BRUSH ? 0.0 : controller.canvasItems[idx].x_axis,
+                                  top: controller.canvasItems[idx].type == CanvasItemType.BRUSH ? 0.0 : controller.canvasItems[idx].y_axis,
                                   child: Transform.rotate(
-                                    angle: controller.canvasItems[idx].rotation,
+                                    angle: controller.canvasItems[idx].type == CanvasItemType.BRUSH ? 0.0 : controller.canvasItems[idx].rotation,
                                     child: Transform.scale(
-                                      scale: controller.canvasItems[idx].scale,
+                                      scale: controller.canvasItems[idx].type == CanvasItemType.BRUSH ? 1.0 : controller.canvasItems[idx].scale,
                                       child: GestureDetector(
                                         onTap: () {
-                                          if (controller.isAnimated.isFalse) {
+                                          if (controller.isAnimated.isFalse && controller.canvasItems[idx].type == CanvasItemType.IMAGE) {
                                             controller.onTep(
                                               index: idx,
                                             );
                                           }
                                         },
-                                        child: Hero(
-                                          tag: idx,
-                                          child: CanvasItemGlobal(
-                                            data: controller.canvasItems[idx].toJson(),
-                                            isLocal: true,
-                                          ),
+                                        child: CanvasItemGlobal(
+                                          data: controller.canvasItems[idx].toJson(),
+                                          isLocal: true,
                                         ),
                                       ),
                                     ),
@@ -163,9 +190,19 @@ class CanvasPreviewView extends GetView<CanvasPreviewController> {
                     ),
                   ),
                 ),
+                // Container(
+                //   height: 100,
+                //   color: Colors.amber,
+                //   child: Column(
+                //     children: [
+
+                //     ],
+                //   ),
+                // ),
               ],
             ),
           ),
+          //* dialog untuk image
           Obx(
             () {
               return AnimatedPositioned(

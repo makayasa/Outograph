@@ -2,11 +2,13 @@ import 'package:flutter/cupertino.dart';
 import 'package:get/get.dart';
 import 'package:outograph/app/utils/function_utils.dart';
 
+import '../../../models/brush_model/brush_widget_model.dart';
 import '../../../models/create_post_model.dart';
 
 class CanvasPreviewController extends GetxController {
   GlobalKey profileKey = GlobalKey();
   ScrollController sc = ScrollController();
+
   var isInPosition = false.obs;
   var isAnimated = false.obs;
   var isVisible = false.obs;
@@ -22,14 +24,17 @@ class CanvasPreviewController extends GetxController {
   var zoomWidth = 100.0.obs;
 
   var url = ''.obs;
-  // var arg = {}.obs;
 
   void initialFunction() {
     if (isNotEmpty(Get.arguments)) {
+      // logKey('argument', Get.arguments);
       var data = CreatePostModel.fromJson(Get.arguments);
       canvasItems.addAll(data.images);
       canvasItems.addAll(data.texts);
       canvasItems.addAll(data.gifs);
+      if (isNotEmpty(data.brush)) {
+        canvasItems.add(BrushWidgetModel.fromJson(data.brush));
+      }
       canvasItems.sort((a, b) => a.index.compareTo(b.index));
     }
   }

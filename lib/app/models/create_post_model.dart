@@ -12,6 +12,7 @@ class CreatePostModel {
     required this.gifs,
     required this.images,
     required this.texts,
+    required this.brush,
     required this.hastags,
     required this.peoples,
   });
@@ -22,6 +23,8 @@ class CreatePostModel {
   List<GifWidgetModel> gifs;
   List<ImageWidgetModel> images;
   List<TextWidgetModels> texts;
+  // BrushWidgetModel brush;
+  Map<String, dynamic> brush;
   List hastags;
   List peoples;
 
@@ -33,6 +36,7 @@ class CreatePostModel {
         gifs: json['gifs'],
         images: json['images'],
         texts: json['texts'],
+        brush: json['brush'],
         hastags: json['hastags'],
         peoples: json['peoples'],
       );
@@ -45,6 +49,7 @@ class CreatePostModel {
         'gifs': gifs,
         'images': images,
         'texts': texts,
+        'brush': brush,
         'hastags': hastags,
         'peoples': peoples,
       };

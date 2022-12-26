@@ -1,9 +1,12 @@
 import 'dart:convert';
 import 'dart:developer' as dev;
 import 'dart:math';
+import 'dart:typed_data';
+import 'dart:ui' as ui;
 
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:get/get.dart';
 
 Matrix4 translate(Offset translation) {
   var dx = translation.dx;
@@ -145,4 +148,57 @@ Map getDefaultSize(GlobalKey key) {
     "height": a.size.height,
     "width": a.size.width,
   };
+}
+
+Future<String> drawerToImage(drawPoint) async {
+  ui.PictureRecorder pictureRecorder = ui.PictureRecorder();
+  var _paint = Paint();
+  Canvas canvas = Canvas(pictureRecorder);
+  for (var i = 0; i < drawPoint.length - 1; i++) {
+    if (drawPoint[i] != null && drawPoint[i + 1] != null) {
+      if (!drawPoint[i]!.isDraw) {
+        canvas.drawLine(
+          Offset(drawPoint[i]!.dx, drawPoint[i]!.dy),
+          Offset(drawPoint[i + 1]!.dx, drawPoint[i + 1]!.dy),
+          Paint()
+            ..color = Colors.brown
+            ..strokeWidth = drawPoint[i]!.stroke
+            ..blendMode = BlendMode.clear,
+        );
+      } else {
+        PaintingStyle _style = PaintingStyle.fill;
+        if (drawPoint[i]!.style == 'stroke') {
+          _style = PaintingStyle.stroke;
+        }
+        _paint.blendMode = BlendMode.srcOver;
+        _paint.isAntiAlias = true;
+        _paint.style = _style;
+        _paint.strokeWidth = drawPoint[i]!.stroke;
+        _paint.color = Color(drawPoint[i]!.color);
+        Path path = Path();
+        path..lineTo(drawPoint[i]!.dx, drawPoint[i + 1]!.dx);
+        // path..addPath(path, Offset(drawPoint[i]!.dx, drawPoint[i]!.dy));
+        // path..addPath(path, Offset(drawPoint[i + 1]!.dx, drawPoint[i + 1]!.dy));
+        // canvas.drawPath(path, _paint);
+
+        canvas.drawLine(
+          Offset(drawPoint[i]!.dx, drawPoint[i]!.dy),
+          Offset(drawPoint[i + 1]!.dx, drawPoint[i + 1]!.dy),
+          _paint,
+        );
+
+        if (drawPoint[i]!.stroke >= 3) {
+          canvas.drawCircle(Offset(drawPoint[i]!.dx, drawPoint[i]!.dy), (drawPoint[i]!.stroke / 20), _paint);
+        } else if (drawPoint[i]!.stroke >= 10) {
+          canvas.drawCircle(Offset(drawPoint[i]!.dx, drawPoint[i]!.dy), (drawPoint[i]!.stroke / 30), _paint);
+        }
+      }
+    }
+  }
+  final picture = pictureRecorder.endRecording();
+  final img = await picture.toImage(Get.width.ceil(), Get.height.ceil());
+  final pngBytes = await img.toByteData(format: ui.ImageByteFormat.png);
+  // final pngBytes = await img.toByteData(format: ImageByteFormat.rawStraightRgba);
+  final base64 = base64Encode(Uint8List.view(pngBytes!.buffer));
+  return base64;
 }

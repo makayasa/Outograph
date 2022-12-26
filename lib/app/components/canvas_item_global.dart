@@ -7,10 +7,12 @@ import 'package:flutter/src/widgets/framework.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:outograph/app/components/default_placeholder.dart';
+import 'package:outograph/app/components/my_custom_painter.dart';
 import 'package:outograph/app/helpers/canvas_helper.dart';
+import 'package:outograph/app/models/brush_model/brush_widget_model.dart';
+import 'package:outograph/app/models/draw_pont.dart';
 import 'package:outograph/app/models/image_model/image_widget_model.dart';
 import 'package:outograph/app/models/text_model/text_widget_models.dart';
-import 'package:outograph/app/utils/function_utils.dart';
 
 class CanvasItemGlobal extends StatelessWidget {
   const CanvasItemGlobal({
@@ -25,9 +27,9 @@ class CanvasItemGlobal extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    // logKey('taipu', data['type']);
     if (data['type'].toUpperCase() == CanvasItemType.IMAGE) {
       var temp = ImageWidgetModel.fromJson(data);
-      logKey('url', temp.url);
       if (isLocal) {
         File imageFile = File.fromUri(Uri.parse(temp.url));
         return Container(
@@ -72,8 +74,41 @@ class CanvasItemGlobal extends StatelessWidget {
           ),
         );
       } catch (e) {
-        showToast('error font not found');
+        // showToast('error font not found');
+        var textStyle = GoogleFonts.getFont(
+          'Montserrat',
+          // fontWeight: dataText.font.fontWeight,
+          height: dataText.font.lineHeight,
+          fontSize: dataText.font.fontSize,
+        );
+        return Container(
+          // color: Colors.amber,
+          child: Text(
+            dataText.longText,
+            style: textStyle,
+          ),
+        );
       }
+    }
+
+    if (data['type'] == CanvasItemType.BRUSH) {
+      var temp = BrushWidgetModel.fromJson(data);
+      // return IgnorePointer(
+      //   child: Container(
+      //     child: Image.memory(
+      //       base64Decode(
+      //         temp.base64,
+      //       ),
+      //     ),
+      //   ),
+      // );
+      return Container(
+        child: CustomPaint(
+          painter: MyCustomPainter(
+            drawPoints: temp.drawpoint.cast<DrawPoint?>(),
+          ),
+        ),
+      );
     }
 
     // Opaque targets can be hit by hit tests, causing them to both receive events within their bounds and prevent targets visually behind them from also receiving events.

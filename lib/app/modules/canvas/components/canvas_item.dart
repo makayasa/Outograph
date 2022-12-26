@@ -257,34 +257,106 @@ class CanvasItem extends GetView<CanvasController> {
           }
           if (controller.widgetsData[index]['edit_mode']) {
             // controller.isTextEditMode.value = true;
-            return IntrinsicWidth(
-              child: Container(
-                decoration: BoxDecoration(
-                  border: Border.all(
-                    color: kInactiveColor,
+            return Stack(
+              clipBehavior: Clip.none,
+              children: [
+                IntrinsicWidth(
+                  child: Container(
+                    decoration: BoxDecoration(
+                      border: Border.all(
+                        color: kInactiveColor,
+                      ),
+                    ),
+                    child: TextFormField(
+                      initialValue: data.value.text,
+                      minLines: 1,
+                      maxLines: null,
+                      keyboardType: TextInputType.multiline,
+                      style: textStyle,
+                      textAlign: textAlign,
+                      onChanged: (value) {
+                        controller.tempEditingText.value = value;
+                      },
+                      decoration: InputDecoration(
+                        border: InputBorder.none,
+                      ),
+                      onFieldSubmitted: (value) {
+                        controller.widgetsData[index]['data']['text'] = value;
+                        controller.widgetsData[index]['edit_mode'] = false;
+                        controller.widgetsData.refresh();
+                        logKey('data', controller.widgetsData[index]['data']);
+                      },
+                    ),
                   ),
                 ),
-                child: TextFormField(
-                  initialValue: data.value.text,
-                  minLines: 1,
-                  maxLines: null,
-                  keyboardType: TextInputType.multiline,
-                  style: textStyle,
-                  textAlign: textAlign,
-                  onChanged: (value) {
-                    controller.tempEditingText.value = value;
-                  },
-                  decoration: InputDecoration(
-                    border: InputBorder.none,
-                  ),
-                  onFieldSubmitted: (value) {
-                    controller.widgetsData[index]['data']['text'] = value;
-                    controller.widgetsData[index]['edit_mode'] = false;
-                    controller.widgetsData.refresh();
-                    logKey('data', controller.widgetsData[index]['data']);
-                  },
-                ),
-              ),
+                //* rotate & scale text
+                // Visibility(
+                //   visible: controller.widgetsData[index]['edit_mode'],
+                //   child: Positioned(
+                //     right: -10,
+                //     top: -10,
+                //     child: Transform.scale(
+                //       scale: 1 / controller.widgetsData[index]['scale'],
+                //       child: GestureDetector(
+                //         onTap: () {
+                //           logKey('rotate onTap');
+                //           controller.widgetsData[index]['can_rotate'] = !controller.widgetsData[index]['can_rotate'];
+                //           controller.widgetsData.refresh();
+                //         },
+                //         child: Material(
+                //           elevation: 5,
+                //           shape: CircleBorder(),
+                //           child: Container(
+                //             height: 35,
+                //             width: 35,
+                //             padding: EdgeInsets.all(5),
+                //             decoration: BoxDecoration(
+                //               color: controller.widgetsData[index]['can_rotate'] ? kBgWhite : kInactiveColor,
+                //               shape: BoxShape.circle,
+                //             ),
+                //             child: Image.asset(
+                //               'assets/icons/rotate.png',
+                //             ),
+                //           ),
+                //         ),
+                //       ),
+                //     ),
+                //   ),
+                // ),
+                // Visibility(
+                //   visible: controller.widgetsData[index]['edit_mode'],
+                //   child: Positioned(
+                //     right: -10,
+                //     bottom: -10,
+                //     child: Transform.scale(
+                //       scale: 1 / controller.widgetsData[index]['scale'],
+                //       child: GestureDetector(
+                //         onTap: () {
+                //           logKey('resize onTap');
+                //           controller.widgetsData[index]['can_resize'] = !controller.widgetsData[index]['can_resize'];
+                //           controller.widgetsData.refresh();
+                //         },
+                //         child: Material(
+                //           elevation: 5,
+                //           shape: CircleBorder(),
+                //           child: Container(
+                //             height: 35,
+                //             width: 35,
+                //             padding: EdgeInsets.all(5),
+                //             decoration: BoxDecoration(
+                //               color: controller.widgetsData[index]['can_resize'] ? kBgWhite : kInactiveColor,
+                //               shape: BoxShape.circle,
+                //             ),
+                //             child: Image.asset(
+                //               'assets/icons/resize.png',
+                //             ),
+                //           ),
+                //         ),
+                //       ),
+                //     ),
+                //   ),
+                // ),
+              ],
             );
           } else {
             return Container(
@@ -345,12 +417,12 @@ class CanvasItem extends GetView<CanvasController> {
             child: Visibility(
               visible: true,
               child: Container(
+                key: controller.listGlobalKey[index],
                 // height: Get.height - controller.bait.value,
                 height: Get.height,
                 width: Get.width,
                 child: CustomPaint(
                   painter: MyCustomPainter(
-                    // color: 0xFF191508,
                     drawPoints: controller.drawPoint.value.cast<DrawPoint?>(),
                   ),
                 ),

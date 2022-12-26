@@ -13,6 +13,7 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:image_cropper/image_cropper.dart';
 import 'package:matrix4_transform/matrix4_transform.dart';
 import 'package:outograph/app/helpers/canvas_helper.dart';
+import 'package:outograph/app/models/brush_model/brush_widget_model.dart';
 import 'package:outograph/app/models/canvas_widget_model.dart';
 import 'package:outograph/app/models/draw_pont.dart';
 import 'package:outograph/app/models/image_model/image_widget_model.dart';
@@ -127,12 +128,11 @@ class CanvasController extends GetxController {
   }
 
   void testPost() async {
-    logKey(widgetsData);
-    // return;
     List<ImageWidgetModel> images = [];
     List<TextWidgetModels> texts = [];
+    BrushWidgetModel? brush;
     var canvasSize = getDefaultSize(canvasKey);
-    logKey('canvacsSize', canvasSize);
+    logKey('drawPoint', drawPoint);
     for (var i = 0; i < widgetsData.length; i++) {
       var dataCanvas = CanvasItemModels.fromJson(widgetsData[i]);
       var size = getSize(i);
@@ -184,15 +184,24 @@ class CanvasController extends GetxController {
             shortText: dataText.text,
           ),
         );
+      } else if (dataCanvas.type == CanvasItemType.BRUSH_BASE) {
+        var _base64 = await drawerToImage(drawPoint);
+        var temp = BrushWidgetModel(
+          index: i,
+          drawpoint: drawPoint,
+          base64: _base64,
+        );
+        brush = temp;
       }
     }
-    // logKey('widgetsData', widgetsData);
+    logKey('brush ada ga', brush);
     var temp = CreatePostModel(
-      width: 300,
-      height: 300,
+      width: canvasSize['width'],
+      height: canvasSize['height'],
       gifs: [],
       images: images,
       texts: texts,
+      brush: brush != null ? brush.toJson() : {},
       hastags: [],
       peoples: [],
     ).toJson();
@@ -402,6 +411,18 @@ class CanvasController extends GetxController {
           matrixRotaion: Matrix4.identity().storage,
         ).toJson(),
       );
+      await Future.delayed(Duration(milliseconds: 500));
+      var index = widgetsData.length - 1;
+      var defSize = getDefaultSize(key);
+      var diffWidth = defSize['width'] - defSize['width'];
+      var diffHeight = defSize['height'] - defSize['height'];
+      widgetsData[index]['default_height'] = defSize['height'];
+      widgetsData[index]['default_width'] = defSize['width'];
+      widgetsData[index]['top_edge'] = widgetsData[index]['dy'] - (diffHeight / 2);
+      widgetsData[index]['bottom_edge'] = widgetsData[index]['top_edge'] + defSize['height'];
+      widgetsData[index]['left_edge'] = widgetsData[index]['dx'] + (diffWidth / 2);
+      widgetsData[index]['right_edge'] = widgetsData[index]['left_edge'] + defSize['width'];
+      widgetsData.refresh();
       saveState();
       return;
     }

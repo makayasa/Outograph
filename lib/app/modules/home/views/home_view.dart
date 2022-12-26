@@ -12,7 +12,9 @@ class HomeView extends GetView<HomeController> {
     Get.put(HomeController());
     return Scaffold(
       appBar: AppBar(
-        title: Text('HomeView'),
+        title: DefText(
+          'HomeView',
+        ).large,
         centerTitle: true,
       ),
       floatingActionButton: FloatingActionButton(

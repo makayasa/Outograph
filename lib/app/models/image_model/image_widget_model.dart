@@ -48,12 +48,12 @@ class ImageWidgetModel {
         scale: json['scale'].toDouble(),
         rotation: json['angle_rotation'].toDouble(),
         createdAt: json['created_at'],
-        top_edge: json['top_edge'],
-        bottom_edge: json['bottom_edge'],
-        left_edge: json['left_edge'],
-        right_edge: json['right_edge'],
-        default_height: json['default_height'],
-        default_width: json['default_width'],
+        top_edge: json['top_edge'] ?? 0.0,
+        bottom_edge: json['bottom_edge'] ?? 0.0,
+        left_edge: json['left_edge'] ?? 0.0,
+        right_edge: json['right_edge'] ?? 0.0,
+        default_height: json['default_height'] ?? 0.0,
+        default_width: json['default_width'] ?? 0.0,
       );
 
   Map<String, dynamic> toJson() => {

@@ -3,8 +3,9 @@ import 'dart:math' as math;
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:outograph/app/components/canvas_item_global.dart';
-import 'package:outograph/app/utils/function_utils.dart';
 
+import '../../../components/default_text.dart';
+import '../../../config/constants.dart';
 import '../controllers/timeline_controller.dart';
 
 class TimelineView extends GetView<TimelineController> {
@@ -12,7 +13,18 @@ class TimelineView extends GetView<TimelineController> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('TimelineView'),
+        leading: InkWell(
+          onTap: () {
+            Get.back();
+          },
+          child: Icon(
+            Icons.arrow_back,
+            color: kBgBlack,
+          ),
+        ),
+        title: DefText(
+          'TimelineView',
+        ).large,
         centerTitle: true,
       ),
       body: Obx(
@@ -39,7 +51,6 @@ class TimelineView extends GetView<TimelineController> {
                           .asMap()
                           .map((idx, value) {
                             var data = items[idx];
-                            logKey('dataz', data);
                             return MapEntry(
                               idx,
                               Positioned(

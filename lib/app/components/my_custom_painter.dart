@@ -16,7 +16,6 @@ class MyCustomPainter extends CustomPainter {
     var _paint = Paint();
 
     canvas.saveLayer(Rect.fromLTWH(0, 0, Get.width + 80, Get.height + 65), Paint());
-
     for (var i = 0; i < drawPoints.length - 1; i++) {
       if (drawPoints[i] != null && drawPoints[i + 1] != null) {
         if (!drawPoints[i]!.isDraw) {
