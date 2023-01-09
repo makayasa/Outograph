@@ -6,7 +6,6 @@ import 'dart:ui' as ui;
 
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
-import 'package:get/get.dart';
 
 Matrix4 translate(Offset translation) {
   var dx = translation.dx;
@@ -142,7 +141,7 @@ void showToast(message, {bgColor, txtColor}) {
       fontSize: 12.0);
 }
 
-Map getDefaultSize(GlobalKey key) {
+Map getSizeByKey(GlobalKey key) {
   final RenderBox a = key.currentContext!.findRenderObject()! as RenderBox;
   return {
     "height": a.size.height,
@@ -177,9 +176,6 @@ Future<String> drawerToImage(drawPoint) async {
         _paint.color = Color(drawPoint[i]!.color);
         Path path = Path();
         path..lineTo(drawPoint[i]!.dx, drawPoint[i + 1]!.dx);
-        // path..addPath(path, Offset(drawPoint[i]!.dx, drawPoint[i]!.dy));
-        // path..addPath(path, Offset(drawPoint[i + 1]!.dx, drawPoint[i + 1]!.dy));
-        // canvas.drawPath(path, _paint);
 
         canvas.drawLine(
           Offset(drawPoint[i]!.dx, drawPoint[i]!.dy),
@@ -196,7 +192,9 @@ Future<String> drawerToImage(drawPoint) async {
     }
   }
   final picture = pictureRecorder.endRecording();
-  final img = await picture.toImage(Get.width.ceil(), Get.height.ceil());
+  // final img = await picture.toImage(Get.width.ceil(), Get.height.ceil());
+  // final img = await picture.toImage(1920, 1080);
+  final img = await picture.toImage(1920, 1080);
   final pngBytes = await img.toByteData(format: ui.ImageByteFormat.png);
   // final pngBytes = await img.toByteData(format: ImageByteFormat.rawStraightRgba);
   final base64 = base64Encode(Uint8List.view(pngBytes!.buffer));

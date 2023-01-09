@@ -1,10 +1,12 @@
 import 'dart:io';
+import 'dart:ui';
 
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:outograph/app/components/canvas_item_global.dart';
 import 'package:outograph/app/components/default_text.dart';
 import 'package:outograph/app/helpers/canvas_helper.dart';
+import 'package:outograph/app/models/image_model/image_widget_model.dart';
 
 import '../../../config/constants.dart';
 import '../controllers/canvas_preview_controller.dart';
@@ -29,7 +31,27 @@ class CanvasPreviewView extends GetView<CanvasPreviewController> {
           ),
         ),
         actions: [
-          Container(),
+          Row(
+            children: [
+              Material(
+                color: kBgBlack,
+                borderRadius: BorderRadius.circular(2),
+                child: InkWell(
+                  onTap: () {
+                    controller.createPost();
+                  },
+                  child: Container(
+                    padding: EdgeInsets.symmetric(horizontal: 15, vertical: 5),
+                    child: DefText(
+                      'Finish',
+                      color: kBgWhite,
+                    ).normal,
+                  ),
+                ),
+              ),
+            ],
+          ),
+          SizedBox(width: 16),
         ],
       ),
       body: Stack(
@@ -136,9 +158,12 @@ class CanvasPreviewView extends GetView<CanvasPreviewController> {
                       ),
                     ),
                     Positioned.fill(
-                      child: Container(
-                        height: double.infinity,
-                        color: Colors.grey.shade500.withOpacity(0.25),
+                      child: Opacity(
+                        opacity: 0.25,
+                        child: Container(
+                          height: double.infinity,
+                          color: Colors.grey.shade500,
+                        ),
                       ),
                     ),
                   ],
@@ -146,8 +171,8 @@ class CanvasPreviewView extends GetView<CanvasPreviewController> {
                 //* Canvas
                 Obx(
                   () => Container(
-                    height: Get.arguments['height'],
-                    width: Get.arguments['width'],
+                    height: controller.canvasHeight.value,
+                    // height: 300,
                     // height: 603.4285714285714,
                     // width: 411.42857142857144,
                     // color: Colors.amber,
@@ -161,7 +186,9 @@ class CanvasPreviewView extends GetView<CanvasPreviewController> {
                                 idx,
                                 Positioned(
                                   left: controller.canvasItems[idx].type == CanvasItemType.BRUSH ? 0.0 : controller.canvasItems[idx].x_axis,
-                                  top: controller.canvasItems[idx].type == CanvasItemType.BRUSH ? 0.0 : controller.canvasItems[idx].y_axis,
+                                  top: controller.canvasItems[idx].type == CanvasItemType.BRUSH
+                                      ? 0.0
+                                      : controller.canvasItems[idx].y_axis - controller.canvasTop.value,
                                   child: Transform.rotate(
                                     angle: controller.canvasItems[idx].type == CanvasItemType.BRUSH ? 0.0 : controller.canvasItems[idx].rotation,
                                     child: Transform.scale(
@@ -190,64 +217,142 @@ class CanvasPreviewView extends GetView<CanvasPreviewController> {
                     ),
                   ),
                 ),
-                // Container(
-                //   height: 100,
-                //   color: Colors.amber,
-                //   child: Column(
-                //     children: [
-
-                //     ],
-                //   ),
-                // ),
               ],
             ),
           ),
           //* dialog untuk image
-          Obx(
-            () {
+          GetX<CanvasPreviewController>(
+            builder: (ctrl) {
+              PageController pageController = PageController(
+                initialPage: controller.checkIndex(canvasItemsIndex: controller.tappedIndex.value) ?? 0,
+              );
               return AnimatedPositioned(
-                // duration: controller.isInPosition.isFalse ? Duration(milliseconds: 1) : Duration(seconds: 2),
-                // duration: controller.duration,
-                duration: controller.isInPosition.isFalse ? Duration(milliseconds: 50) : controller.duration,
+                duration: !controller.isInPosition.value ? Duration(microseconds: 1) : controller.duration,
                 height: controller.zoomHeight.value,
                 width: controller.zoomWidth.value,
                 top: controller.animatedY.value,
                 left: controller.animatedX.value,
-                onEnd: () {
+                onEnd: () async {
                   if (controller.isInPosition.isFalse) {
                     controller.isInPosition.value = true;
                     controller.isVisible.value = true;
                   } else {
                     controller.isAnimated.value = false;
                     controller.isVisible.value = false;
-                    Get.dialog(
-                      Dialog(
-                        child: Container(
-                          child: Image.file(
-                            File.fromUri(
-                              Uri.parse(
-                                controller.url.value,
+                    controller.isInPosition.value = false;
+                    await Get.dialog(
+                      transitionDuration: Duration(milliseconds: 250),
+                      transitionCurve: Curves.easeInOutCirc,
+                      BackdropFilter(
+                        filter: ImageFilter.blur(sigmaX: 10, sigmaY: 10),
+                        child: Dialog(
+                          backgroundColor: Colors.transparent,
+                          insetPadding: EdgeInsets.symmetric(vertical: 25),
+                          child: Container(
+                            child: SingleChildScrollView(
+                              physics: NeverScrollableScrollPhysics(),
+                              child: Column(
+                                children: [
+                                  Obx(
+                                    () => Container(
+                                      constraints: BoxConstraints(maxHeight: Get.height * 0.75),
+                                      child: PageView.builder(
+                                        itemCount: controller.canPopupImages.length,
+                                        // controller: controller.dialogPageController,
+                                        controller: pageController,
+                                        scrollDirection: Axis.horizontal,
+                                        itemBuilder: (context, index) {
+                                          var data = ImageWidgetModel.fromJson(controller.canPopupImages[index].toJson());
+                                          var url = data.url;
+                                          return Container(
+                                            child: Image.file(
+                                              File.fromUri(
+                                                Uri.parse(url),
+                                              ),
+                                            ),
+                                          );
+                                        },
+                                      ),
+                                    ),
+                                  ),
+                                  SizedBox(height: 10),
+                                  Obx(
+                                    () => Container(
+                                      height: 100,
+                                      child: ListView.separated(
+                                        padding: EdgeInsets.symmetric(horizontal: 10),
+                                        shrinkWrap: true,
+                                        itemCount: controller.canPopupImages.length,
+                                        scrollDirection: Axis.horizontal,
+                                        physics: BouncingScrollPhysics(
+                                          parent: AlwaysScrollableScrollPhysics(),
+                                        ),
+                                        separatorBuilder: (context, index) => SizedBox(
+                                          width: 5,
+                                        ),
+                                        itemBuilder: (context, index) {
+                                          // logKey('items $index', controller.canPopupImages[index]);
+                                          var data = ImageWidgetModel.fromJson(controller.canPopupImages[index].toJson());
+                                          var url = data.url;
+                                          // logKey('uri', uri);
+                                          return GestureDetector(
+                                            onTap: () {
+                                              // controller.url.value = url;
+                                              pageController.animateToPage(
+                                                index,
+                                                duration: controller.duration,
+                                                curve: Curves.easeInOutCirc,
+                                              );
+                                            },
+                                            child: Container(
+                                              // width: 75,
+                                              color: Colors.amber,
+                                              child: Image.file(
+                                                File.fromUri(
+                                                  Uri.parse(url),
+                                                ),
+                                              ),
+                                            ),
+                                          );
+                                        },
+                                      ),
+                                    ),
+                                  ),
+                                  SizedBox(height: 25),
+                                ],
                               ),
                             ),
                           ),
                         ),
                       ),
                     );
+                    pageController.dispose();
                   }
                 },
                 child: IgnorePointer(
-                  child: Visibility(
-                    // visible: !controller.isVisible.value,
-                    visible: controller.url.value != '' && controller.isVisible.value,
-                    child: Container(
-                      width: 250,
-                      child: Image.file(
-                        File.fromUri(
-                          Uri.parse(
-                            controller.url.value,
+                  child: AnimatedCrossFade(
+                    duration: Duration(milliseconds: 250),
+                    layoutBuilder: (topChild, topChildKey, bottomChild, bottomChildKey) {
+                      return topChild;
+                    },
+                    crossFadeState: controller.isVisible.value ? CrossFadeState.showFirst : CrossFadeState.showFirst,
+                    firstChild: Opacity(
+                      opacity: controller.isInPosition.value && controller.url.value != '' ? 1 : 0,
+                      child: Container(
+                        width: 250,
+                        child: Image.file(
+                          File.fromUri(
+                            Uri.parse(
+                              controller.url.value,
+                            ),
                           ),
                         ),
                       ),
+                    ),
+                    secondChild: Container(
+                      height: 100,
+                      width: 100,
+                      color: Colors.amber,
                     ),
                   ),
                 ),

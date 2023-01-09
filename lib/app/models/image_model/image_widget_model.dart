@@ -12,14 +12,16 @@ class ImageWidgetModel {
     this.scale = 1.0,
     this.rotation = 0.0,
     required this.createdAt,
-    required this.top_edge,
-    required this.bottom_edge,
-    required this.left_edge,
-    required this.right_edge,
+    this.top_edge,
+    this.bottom_edge,
+    this.left_edge,
+    this.right_edge,
     required this.default_height,
     required this.default_width,
+    this.base64data,
   });
   int index;
+  String? base64data;
   String url;
   double width;
   double height;
@@ -31,16 +33,17 @@ class ImageWidgetModel {
   String createdAt;
 
   //*untuk kebutuhan canvas
-  double top_edge;
-  double bottom_edge;
-  double left_edge;
-  double right_edge;
-  double default_height;
-  double default_width;
+  double? top_edge;
+  double? bottom_edge;
+  double? left_edge;
+  double? right_edge;
+  double? default_height;
+  double? default_width;
 
   factory ImageWidgetModel.fromJson(Map<String, dynamic> json) => ImageWidgetModel(
         index: json['index'],
         url: json['url'],
+        // base64data: json['base64data'],
         width: json['width'].toDouble(),
         height: json['height'].toDouble(),
         x_axis: json['x_axis'].toDouble(),
@@ -62,6 +65,7 @@ class ImageWidgetModel {
         "width": width,
         "height": height,
         // "index": 0,
+        'base64data': base64data ?? '',
         "type": type,
         "x_axis": x_axis,
         "y_axis": y_axis,

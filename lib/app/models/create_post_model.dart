@@ -9,6 +9,8 @@ class CreatePostModel {
     this.userCanvasTarget = '',
     required this.width,
     required this.height,
+    required this.topHeight,
+    required this.bottomHeight,
     required this.gifs,
     required this.images,
     required this.texts,
@@ -20,6 +22,8 @@ class CreatePostModel {
   String userCanvasTarget;
   double width;
   double height;
+  double topHeight;
+  double bottomHeight;
   List<GifWidgetModel> gifs;
   List<ImageWidgetModel> images;
   List<TextWidgetModels> texts;
@@ -33,6 +37,8 @@ class CreatePostModel {
         userCanvasTarget: json['user_canvas_target'],
         width: json['width'],
         height: json['height'],
+        topHeight: json['top_height'],
+        bottomHeight: json['bottom_height'],
         gifs: json['gifs'],
         images: json['images'],
         texts: json['texts'],
@@ -46,6 +52,8 @@ class CreatePostModel {
         'user_canvas_target': userCanvasTarget,
         'width': width,
         'height': height,
+        'top_height': topHeight,
+        'bottom_height': bottomHeight,
         'gifs': gifs,
         'images': images,
         'texts': texts,

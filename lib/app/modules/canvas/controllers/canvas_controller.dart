@@ -36,8 +36,19 @@ import '../../../utils/function_utils.dart';
 class CanvasController extends GetxController {
   GlobalKey keyRed = GlobalKey();
   GlobalKey canvasKey = GlobalKey();
+  var canvasHeight = 0.0.obs;
+  var showedCanvasHeight = 0.0.obs;
+  var minimumHeight = 300.0;
 
   List<GlobalKey> listGlobalKey = [];
+
+  var topHeight = 0.0.obs;
+  var topHeightEnd = 0.0.obs;
+
+  var bottomHeight = 0.0.obs;
+  var bottomHeightEnd = 0.0.obs;
+
+  var bottomSlide = true.obs;
 
   var box = GetStorage();
   var bait = 75.obs;
@@ -95,6 +106,9 @@ class CanvasController extends GetxController {
   void onReady() {
     super.onReady();
     initFunction();
+    var canvasSize = getSizeByKey(canvasKey);
+    canvasHeight.value = canvasSize['height'];
+    calcCanvasSize();
   }
 
   @override
@@ -106,6 +120,10 @@ class CanvasController extends GetxController {
   }
 
   //* functions
+
+  void calcCanvasSize() {
+    showedCanvasHeight.value = canvasHeight.value - topHeight.value - bottomHeight.value;
+  }
 
   void testPublish() async {
     List temp = box.read('canvas') ?? [];
@@ -131,7 +149,7 @@ class CanvasController extends GetxController {
     List<ImageWidgetModel> images = [];
     List<TextWidgetModels> texts = [];
     BrushWidgetModel? brush;
-    var canvasSize = getDefaultSize(canvasKey);
+    var canvasSize = getSizeByKey(canvasKey);
     logKey('drawPoint', drawPoint);
     for (var i = 0; i < widgetsData.length; i++) {
       var dataCanvas = CanvasItemModels.fromJson(widgetsData[i]);
@@ -194,10 +212,13 @@ class CanvasController extends GetxController {
         brush = temp;
       }
     }
-    logKey('brush ada ga', brush);
     var temp = CreatePostModel(
+      // width: canvasSize['width'],
+      // height: canvasSize['height'],
       width: canvasSize['width'],
-      height: canvasSize['height'],
+      height: showedCanvasHeight.value,
+      topHeight: topHeight.value,
+      bottomHeight: bottomHeight.value,
       gifs: [],
       images: images,
       texts: texts,
@@ -380,7 +401,7 @@ class CanvasController extends GetxController {
       );
       await Future.delayed(Duration(milliseconds: 500));
       var index = widgetsData.length - 1;
-      var defSize = getDefaultSize(key);
+      var defSize = getSizeByKey(key);
       var diffWidth = defSize['width'] - defSize['width'];
       var diffHeight = defSize['height'] - defSize['height'];
       widgetsData[index]['default_height'] = defSize['height'];
@@ -413,7 +434,7 @@ class CanvasController extends GetxController {
       );
       await Future.delayed(Duration(milliseconds: 500));
       var index = widgetsData.length - 1;
-      var defSize = getDefaultSize(key);
+      var defSize = getSizeByKey(key);
       var diffWidth = defSize['width'] - defSize['width'];
       var diffHeight = defSize['height'] - defSize['height'];
       widgetsData[index]['default_height'] = defSize['height'];
@@ -446,7 +467,7 @@ class CanvasController extends GetxController {
       );
       await Future.delayed(Duration(milliseconds: 500));
       var index = widgetsData.length - 1;
-      var defSize = getDefaultSize(key);
+      var defSize = getSizeByKey(key);
       var diffWidth = defSize['width'] - defSize['width'];
       var diffHeight = defSize['height'] - defSize['height'];
       widgetsData[index]['default_height'] = defSize['height'];
@@ -994,7 +1015,8 @@ class CanvasController extends GetxController {
 
   void openImage() async {
     imageScrollController = ScrollController();
-    tempMinHeigh.value = 280.0;
+    // tempMinHeigh.value = 280.0;
+    tempMinHeigh.value = Get.height * 0.3;
 
     panelImageController.show();
     imageScrollController.addListener(() async {

@@ -1,3 +1,4 @@
+import 'dart:convert';
 import 'dart:io';
 
 import 'package:cached_network_image/cached_network_image.dart';
@@ -7,10 +8,8 @@ import 'package:flutter/src/widgets/framework.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:outograph/app/components/default_placeholder.dart';
-import 'package:outograph/app/components/my_custom_painter.dart';
 import 'package:outograph/app/helpers/canvas_helper.dart';
 import 'package:outograph/app/models/brush_model/brush_widget_model.dart';
-import 'package:outograph/app/models/draw_pont.dart';
 import 'package:outograph/app/models/image_model/image_widget_model.dart';
 import 'package:outograph/app/models/text_model/text_widget_models.dart';
 
@@ -93,22 +92,22 @@ class CanvasItemGlobal extends StatelessWidget {
 
     if (data['type'] == CanvasItemType.BRUSH) {
       var temp = BrushWidgetModel.fromJson(data);
-      // return IgnorePointer(
-      //   child: Container(
-      //     child: Image.memory(
-      //       base64Decode(
-      //         temp.base64,
-      //       ),
-      //     ),
-      //   ),
-      // );
-      return Container(
-        child: CustomPaint(
-          painter: MyCustomPainter(
-            drawPoints: temp.drawpoint.cast<DrawPoint?>(),
+      return IgnorePointer(
+        child: Container(
+          child: Image.memory(
+            base64Decode(
+              temp.base64,
+            ),
           ),
         ),
       );
+      // return Container(
+      //   child: CustomPaint(
+      //     painter: MyCustomPainter(
+      //       drawPoints: temp.drawpoint.cast<DrawPoint?>(),
+      //     ),
+      //   ),
+      // );
     }
 
     // Opaque targets can be hit by hit tests, causing them to both receive events within their bounds and prevent targets visually behind them from also receiving events.
