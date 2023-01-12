@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'dart:convert';
+import 'dart:io';
 import 'dart:math' as math;
 
 import 'package:cyclop/cyclop.dart' as cyc;
@@ -125,26 +126,6 @@ class CanvasController extends GetxController {
     showedCanvasHeight.value = canvasHeight.value - topHeight.value - bottomHeight.value;
   }
 
-  void testPublish() async {
-    List temp = box.read('canvas') ?? [];
-    for (var element in widgetsData) {
-      if (element['type'] == CanvasItemType.BRUSH_BASE) {
-        element['data'] = {'drawpoint': drawPoint};
-        break;
-      }
-    }
-    var data = {
-      'caption': 'test ${temp.length}',
-      'canvas': widgetsData,
-    };
-    temp.add(data);
-    await box.write('canvas', temp);
-    if (panelImageController.isPanelOpen) {
-      await closeImage();
-    }
-    Get.back();
-  }
-
   void testPost() async {
     List<ImageWidgetModel> images = [];
     List<TextWidgetModels> texts = [];
@@ -161,7 +142,7 @@ class CanvasController extends GetxController {
           ImageWidgetModel(
             index: i,
             type: dataCanvas.type,
-            url: dataImageCanvas.path,
+            path: dataImageCanvas.path,
             x_axis: dataCanvas.dx,
             y_axis: dataCanvas.dy,
             rotation: dataCanvas.rotation,
@@ -226,11 +207,11 @@ class CanvasController extends GetxController {
       hastags: [],
       peoples: [],
     ).toJson();
+
     Get.toNamed(
       Routes.CANVAS_PREVIEW,
       arguments: temp,
     );
-    logKey('temp', temp);
   }
 
   void botNavTap(int index) {
@@ -343,6 +324,8 @@ class CanvasController extends GetxController {
     widgetsData[index]['left_edge'] = widgetsData[index]['dx'] - (diffWidth / 2);
     widgetsData[index]['right_edge'] = widgetsData[index]['left_edge'] + size['width'];
   }
+
+  var bytes = 0.0.obs;
 
   void addWidget({String type = '', dynamic data}) async {
     redoStates.clear();
@@ -975,6 +958,18 @@ class CanvasController extends GetxController {
   }
 
   void initFunction() async {
+    widgetsData.listen((element) {
+      var _tempBytes = 0.0;
+      for (var e in element) {
+        var _data = CanvasItemModels.fromJson(e);
+        if (_data.type == CanvasItemType.IMAGE) {
+          var _imageData = ImageWidgetDataModels.fromJson(_data.data);
+          var _file = File(_imageData.path);
+          _tempBytes += _file.readAsBytesSync().length;
+        }
+      }
+      bytes.value = _tempBytes;
+    });
     keyboardController = KeyboardVisibilityController();
     keyboardSubscription = keyboardController.onChange.listen((event) {
       isKeybordShowed.value = event;
@@ -1015,7 +1010,6 @@ class CanvasController extends GetxController {
 
   void openImage() async {
     imageScrollController = ScrollController();
-    // tempMinHeigh.value = 280.0;
     tempMinHeigh.value = Get.height * 0.3;
 
     panelImageController.show();
@@ -1028,14 +1022,12 @@ class CanvasController extends GetxController {
     });
     final List<AssetPathEntity> temp = await PhotoManager.getAssetPathList(
       onlyAll: true,
-      // hasAll: true,
       type: RequestType.image,
       filterOption: _filterOptionGroup,
     );
     paths.addAll(temp);
     var imagesEntity = await paths[0].getAssetListPaged(page: imagePageIndex.value, size: 40);
     listImages.addAll(imagesEntity);
-    logKey('listImages length init', listImages.length);
   }
 
   Future<void> closeImage() async {

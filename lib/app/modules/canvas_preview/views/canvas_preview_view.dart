@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:outograph/app/components/canvas_item_global.dart';
 import 'package:outograph/app/components/default_text.dart';
+import 'package:outograph/app/components/profile_header.dart';
 import 'package:outograph/app/helpers/canvas_helper.dart';
 import 'package:outograph/app/models/image_model/image_widget_model.dart';
 
@@ -54,107 +55,28 @@ class CanvasPreviewView extends GetView<CanvasPreviewController> {
           SizedBox(width: 16),
         ],
       ),
+      floatingActionButton: FloatingActionButton(
+        onPressed: () {
+          controller.createPost();
+        },
+      ),
       body: Stack(
         children: [
           SingleChildScrollView(
             controller: controller.sc,
             child: Column(
               children: [
-                //* Profile
                 Stack(
-                  // fit: StackFit.expand,
                   children: [
+                    //* overlay profile
                     Container(
                       key: controller.profileKey,
                       decoration: BoxDecoration(
                           // color: Colors.grey,
                           ),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.center,
-                        mainAxisSize: MainAxisSize.min,
-                        children: [
-                          SizedBox(height: 5),
-                          //* following row
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              Column(
-                                children: [
-                                  DefText('Following').normal,
-                                  SizedBox(height: 5),
-                                  DefText(
-                                    '128',
-                                    fontWeight: FontWeight.bold,
-                                  ).semilarge,
-                                ],
-                              ),
-                              SizedBox(width: 25),
-                              Container(
-                                height: 75,
-                                width: 75,
-                                decoration: BoxDecoration(
-                                  shape: BoxShape.circle,
-                                  color: Colors.amber,
-                                ),
-                                child: CircleAvatar(
-                                  backgroundImage: AssetImage(
-                                    'assets/images/profile.png',
-                                  ),
-                                ),
-                                // child: Image.asset(
-                                //   'assets/images/default_picture.jpeg',
-                                //   fit: BoxFit.cover,
-                                // ),
-                              ),
-                              SizedBox(width: 25),
-                              Column(
-                                children: [
-                                  DefText('Followers').normal,
-                                  SizedBox(height: 5),
-                                  DefText(
-                                    '93',
-                                    fontWeight: FontWeight.bold,
-                                  ).semilarge,
-                                ],
-                              ),
-                            ],
-                          ),
-                          SizedBox(height: 10),
-                          //* name
-                          DefText(
-                            'miss_chan',
-                            fontWeight: FontWeight.bold,
-                          ).normal,
-                          SizedBox(height: 10),
-                          DefText('Misa Hana Lestari').normal,
-                          SizedBox(height: 20),
-                          //* impression
-                          Padding(
-                            padding: EdgeInsets.symmetric(horizontal: 15),
-                            child: Row(
-                              children: [
-                                DefText('63 Impressions').normal,
-                                Spacer(),
-                                DefText('Post').normal,
-                              ],
-                            ),
-                          ),
-                          SizedBox(height: 10),
-                          Divider(),
-                          SizedBox(height: 10),
-                          //* Pinned, canvas, tag
-                          Container(
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceAround,
-                              children: [
-                                DefText('Pinned').normal,
-                                DefText('Canvas').normal,
-                                DefText('Tag').normal,
-                              ],
-                            ),
-                          ),
-                          SizedBox(height: 15),
-                        ],
+                      //* Profile
+                      child: ProfileHeader(
+                        isPreview: true,
                       ),
                     ),
                     Positioned.fill(
@@ -263,12 +185,13 @@ class CanvasPreviewView extends GetView<CanvasPreviewController> {
                                         scrollDirection: Axis.horizontal,
                                         itemBuilder: (context, index) {
                                           var data = ImageWidgetModel.fromJson(controller.canPopupImages[index].toJson());
-                                          var url = data.url;
+                                          var url = data.path;
                                           return Container(
                                             child: Image.file(
-                                              File.fromUri(
-                                                Uri.parse(url),
-                                              ),
+                                              File(url),
+                                              // File.fromUri(
+                                              //   Uri.parse(url),
+                                              // ),
                                             ),
                                           );
                                         },
@@ -293,7 +216,7 @@ class CanvasPreviewView extends GetView<CanvasPreviewController> {
                                         itemBuilder: (context, index) {
                                           // logKey('items $index', controller.canPopupImages[index]);
                                           var data = ImageWidgetModel.fromJson(controller.canPopupImages[index].toJson());
-                                          var url = data.url;
+                                          var url = data.path;
                                           // logKey('uri', uri);
                                           return GestureDetector(
                                             onTap: () {

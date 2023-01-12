@@ -30,7 +30,7 @@ class CanvasItemGlobal extends StatelessWidget {
     if (data['type'].toUpperCase() == CanvasItemType.IMAGE) {
       var temp = ImageWidgetModel.fromJson(data);
       if (isLocal) {
-        File imageFile = File.fromUri(Uri.parse(temp.url));
+        File imageFile = File.fromUri(Uri.parse(temp.path));
         return Container(
           constraints: BoxConstraints(
             maxHeight: 400,
@@ -46,7 +46,7 @@ class CanvasItemGlobal extends StatelessWidget {
         return Container(
           constraints: BoxConstraints(maxHeight: 400),
           child: CachedNetworkImage(
-            imageUrl: temp.url,
+            imageUrl: temp.path,
             placeholder: (context, url) => DefaultPlaceholder(
               height: 100,
               width: 100,

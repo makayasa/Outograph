@@ -102,6 +102,7 @@ class CanvasView extends GetView<CanvasController> {
                               mainAxisSize: MainAxisSize.min,
                               children: [
                                 DefText('Publish').normal,
+                                // DefText('Bytes : ${controller.bytes.value}').normal,
                                 SizedBox(width: 5),
                                 Icon(
                                   Icons.check,

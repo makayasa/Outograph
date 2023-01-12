@@ -58,7 +58,15 @@ class CreatePostModel {
         'images': images,
         'texts': texts,
         'brush': brush,
+        'background': {
+          "color": "123123",
+          "key": "istockphoto-1369271869-612x612.jpg",
+        },
         'hastags': hastags,
-        'peoples': peoples,
+        // 'peoples': peoples,
+        'peoples': [
+          {"user_id": "63371580b9ef8ae07fc631c0"},
+          {"user_id": "6337b93ab9ef8ae07fc631c4"}
+        ],
       };
 }

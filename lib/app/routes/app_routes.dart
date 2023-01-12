@@ -8,6 +8,7 @@ abstract class Routes {
   static const CANVAS = _Paths.CANVAS;
   static const TIMELINE = _Paths.TIMELINE;
   static const CANVAS_PREVIEW = _Paths.CANVAS_PREVIEW;
+  static const PROFILE = _Paths.PROFILE;
 }
 
 abstract class _Paths {
@@ -15,4 +16,5 @@ abstract class _Paths {
   static const CANVAS = '/canvas';
   static const TIMELINE = '/timeline';
   static const CANVAS_PREVIEW = '/canvas-preview';
+  static const PROFILE = '/profile';
 }

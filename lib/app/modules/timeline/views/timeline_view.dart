@@ -2,7 +2,8 @@ import 'dart:math' as math;
 
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:outograph/app/components/canvas_item_global.dart';
+import 'package:outograph/app/components/timeline_item.dart';
+import 'package:outograph/app/utils/function_utils.dart';
 
 import '../../../components/default_text.dart';
 import '../../../config/constants.dart';
@@ -29,7 +30,6 @@ class TimelineView extends GetView<TimelineController> {
       ),
       body: Obx(
         () => ListView.separated(
-          // itemCount: controller.testTimeline.length,
           itemCount: controller.newTimeLine.length,
           separatorBuilder: (context, index) {
             return SizedBox(
@@ -37,7 +37,6 @@ class TimelineView extends GetView<TimelineController> {
             );
           },
           itemBuilder: (context, index) {
-            // List items = controller.testTimeline[index]['canvas'];
             List items = controller.newTimeLine[index]['items'];
             return Container(
               child: Column(
@@ -51,23 +50,25 @@ class TimelineView extends GetView<TimelineController> {
                           .asMap()
                           .map((idx, value) {
                             var data = items[idx];
+                            logKey('data $idx', data);
                             return MapEntry(
                               idx,
-                              Positioned(
-                                left: data['x_axis'].toDouble(),
-                                top: data['y_axis'].toDouble(),
-                                child: Transform.rotate(
-                                  angle: data['angle_rotation'].toDouble(),
-                                  child: Transform.scale(
-                                    scale: data['scale'].toDouble(),
-                                    child: Container(
-                                      child: CanvasItemGlobal(
-                                        data: data,
-                                      ),
-                                    ),
-                                  ),
-                                ),
-                              ),
+                              TimelineItem(data: data),
+                              // Positioned(
+                              //   left: data['x_axis'].toDouble(),
+                              //   top: data['y_axis'].toDouble(),
+                              //   child: Transform.rotate(
+                              //     angle: data['angle_rotation'].toDouble(),
+                              //     child: Transform.scale(
+                              //       scale: data['scale'].toDouble(),
+                              //       child: Container(
+                              //         child: CanvasItemGlobal(
+                              //           data: data,
+                              //         ),
+                              //       ),
+                              //     ),
+                              //   ),
+                              // ),
                             );
                           })
                           .values
@@ -75,7 +76,6 @@ class TimelineView extends GetView<TimelineController> {
                     ),
                   ),
                   SizedBox(height: 10),
-                  // DefText(controller.testTimeline[index]['caption']).normal,
                 ],
               ),
             );

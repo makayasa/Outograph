@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:outograph/app/config/constants.dart';
 
 import 'app/routes/app_pages.dart';
@@ -11,7 +12,7 @@ void main() async {
   await GetStorage.init();
   runApp(
     GetMaterialApp(
-      title: "Application",
+      title: "Outograph",
       initialRoute: AppPages.INITIAL,
       getPages: AppPages.routes,
       debugShowCheckedModeBanner: false,
@@ -19,6 +20,7 @@ void main() async {
         appBarTheme: AppBarTheme(
           backgroundColor: kBgWhite,
         ),
+        textTheme: GoogleFonts.workSansTextTheme(),
       ),
     ),
   );

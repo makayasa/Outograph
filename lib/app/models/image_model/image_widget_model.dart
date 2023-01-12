@@ -3,7 +3,7 @@ import 'package:outograph/app/helpers/canvas_helper.dart';
 class ImageWidgetModel {
   ImageWidgetModel({
     required this.index,
-    required this.url,
+    required this.path,
     required this.width,
     required this.height,
     this.type = CanvasItemType.IMAGE,
@@ -18,11 +18,11 @@ class ImageWidgetModel {
     this.right_edge,
     required this.default_height,
     required this.default_width,
-    this.base64data,
+    this.key,
   });
   int index;
-  String? base64data;
-  String url;
+  String? key;
+  String path;
   double width;
   double height;
   String type;
@@ -42,7 +42,8 @@ class ImageWidgetModel {
 
   factory ImageWidgetModel.fromJson(Map<String, dynamic> json) => ImageWidgetModel(
         index: json['index'],
-        url: json['url'],
+        path: json['path'],
+        key: json['key'] ?? '',
         // base64data: json['base64data'],
         width: json['width'].toDouble(),
         height: json['height'].toDouble(),
@@ -61,11 +62,11 @@ class ImageWidgetModel {
 
   Map<String, dynamic> toJson() => {
         'index': index,
-        "url": url,
+        "path": path,
         "width": width,
         "height": height,
         // "index": 0,
-        'base64data': base64data ?? '',
+        'key': key ?? '',
         "type": type,
         "x_axis": x_axis,
         "y_axis": y_axis,

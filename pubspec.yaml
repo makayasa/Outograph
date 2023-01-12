@@ -1,5 +1,5 @@
 name: outograph
-version: 1.0.2+2
+version: 1.0.3+3
 publish_to: none
 description: A new Flutter project.
 environment:
@@ -40,6 +40,14 @@ dependencies:
   connectivity_plus: ^3.0.2
   flutter_dotenv: ^5.0.2
   fluttertoast: ^8.1.2
+  http_parser: ^4.0.2
+  aws3_bucket: ^0.0.7
+  # dospace: ^0.13.15
+  minio: ^3.5.0
+  uuid: ^3.0.7
+  # aws_s3_storage: ^0.0.1
+  # aws_s3_plugin_flutter: ^0.0.5
+  # amplify_storage_s3: ^0.5.1
 
 dev_dependencies:
   flutter_lints: ^2.0.0

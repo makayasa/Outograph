@@ -6,6 +6,8 @@ import 'package:outograph/app/modules/canvas_preview/bindings/canvas_preview_bin
 import 'package:outograph/app/modules/canvas_preview/views/canvas_preview_view.dart';
 import 'package:outograph/app/modules/home/bindings/home_binding.dart';
 import 'package:outograph/app/modules/home/views/home_view.dart';
+import 'package:outograph/app/modules/profile/bindings/profile_binding.dart';
+import 'package:outograph/app/modules/profile/views/profile_view.dart';
 import 'package:outograph/app/modules/timeline/bindings/timeline_binding.dart';
 import 'package:outograph/app/modules/timeline/views/timeline_view.dart';
 
@@ -36,6 +38,11 @@ class AppPages {
       name: _Paths.CANVAS_PREVIEW,
       page: () => CanvasPreviewView(),
       binding: CanvasPreviewBinding(),
+    ),
+    GetPage(
+      name: _Paths.PROFILE,
+      page: () => ProfileView(),
+      binding: ProfileBinding(),
     ),
   ];
 }

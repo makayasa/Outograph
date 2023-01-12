@@ -60,6 +60,20 @@ class HomeView extends GetView<HomeController> {
                   child: DefText('Timeline').normal,
                 ),
               ),
+              SizedBox(height: 10),
+              InkWell(
+                onTap: () {
+                  Get.toNamed(Routes.PROFILE);
+                },
+                child: Container(
+                  padding: EdgeInsets.all(10),
+                  decoration: BoxDecoration(
+                    color: Colors.amber,
+                    borderRadius: BorderRadius.circular(10),
+                  ),
+                  child: DefText('Profile').normal,
+                ),
+              ),
             ],
           ),
         ),

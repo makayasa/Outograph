@@ -17,14 +17,12 @@ class CanvasImagesList extends GetView<CanvasController> {
   @override
   Widget build(BuildContext context) {
     return Container(
-      // padding: EdgeInsets.only(top: 10),
       decoration: BoxDecoration(
         color: kBgWhite,
       ),
       child: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
-          // SizedBox(height: 10),
           GestureDetector(
             onTap: () {
               if (controller.panelImageController.panelPosition == 0) {
@@ -48,7 +46,6 @@ class CanvasImagesList extends GetView<CanvasController> {
               ),
             ),
           ),
-          // SizedBox(height: 10),
           Expanded(
             child: Obx(
               () => GridView.builder(
@@ -57,14 +54,11 @@ class CanvasImagesList extends GetView<CanvasController> {
                 controller: controller.imageScrollController,
                 gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
                   crossAxisCount: 4,
-                  // crossAxisSpacing: 2.5,
-                  // mainAxisSpacing: 2.5,
                 ),
                 itemCount: controller.listImages.length,
                 itemBuilder: (context, index) {
                   return GestureDetector(
                     onTap: () async {
-                      // logKey('media url', await controller.listImages[index].file);
                       var path = await controller.listImages[index].file;
                       await controller.closeImage();
                       controller.botNavIndex.value = -1;

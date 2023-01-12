@@ -22,7 +22,7 @@ class TimelineController extends GetxController {
   void getPost() async {
     logKey('getPost masuk');
     dio.Response res = await netUtil.get(
-      '${baseUrl!}/post',
+      '${baseUrl}/post',
     );
     logKey('res getPost', res.data);
     List temp = []..assignAll(res.data);
