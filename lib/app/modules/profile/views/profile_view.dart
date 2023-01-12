@@ -1,9 +1,9 @@
+import 'package:Outograph/app/components/default_text.dart';
+import 'package:Outograph/app/components/profile_header.dart';
+import 'package:Outograph/app/components/timeline_item.dart';
+import 'package:Outograph/app/config/constants.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:outograph/app/components/default_text.dart';
-import 'package:outograph/app/components/profile_header.dart';
-import 'package:outograph/app/components/timeline_item.dart';
-import 'package:outograph/app/config/constants.dart';
 
 import '../controllers/profile_controller.dart';
 

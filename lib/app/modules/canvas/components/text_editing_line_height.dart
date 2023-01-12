@@ -1,9 +1,9 @@
+import 'package:Outograph/app/components/default_text.dart';
+import 'package:Outograph/app/modules/canvas/controllers/canvas_controller.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/src/widgets/container.dart';
 import 'package:flutter/src/widgets/framework.dart';
 import 'package:get/get.dart';
-import 'package:outograph/app/components/default_text.dart';
-import 'package:outograph/app/modules/canvas/controllers/canvas_controller.dart';
 
 import '../../../config/constants.dart';
 

@@ -1,15 +1,15 @@
 import 'dart:io';
 
+import 'package:Outograph/app/components/default_text.dart';
+import 'package:Outograph/app/config/environtment.dart';
+import 'package:Outograph/app/helpers/canvas_helper.dart';
+import 'package:Outograph/app/models/image_model/image_widget_model.dart';
+import 'package:Outograph/app/utils/function_utils.dart';
+import 'package:Outograph/app/utils/network_utils.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:minio/minio.dart';
-import 'package:outograph/app/components/default_text.dart';
-import 'package:outograph/app/config/environtment.dart';
-import 'package:outograph/app/helpers/canvas_helper.dart';
-import 'package:outograph/app/models/image_model/image_widget_model.dart';
-import 'package:outograph/app/utils/function_utils.dart';
-import 'package:outograph/app/utils/network_utils.dart';
 import 'package:path/path.dart' as pathDart;
 import 'package:uuid/uuid.dart';
 

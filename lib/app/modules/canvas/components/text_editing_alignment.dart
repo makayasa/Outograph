@@ -1,9 +1,9 @@
+import 'package:Outograph/app/helpers/text_align_helper.dart';
+import 'package:Outograph/app/modules/canvas/controllers/canvas_controller.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/src/widgets/container.dart';
 import 'package:flutter/src/widgets/framework.dart';
 import 'package:get/get.dart';
-import 'package:outograph/app/helpers/text_align_helper.dart';
-import 'package:outograph/app/modules/canvas/controllers/canvas_controller.dart';
 
 import '../../../config/constants.dart';
 import '../../../models/text_widget_data_models.dart';

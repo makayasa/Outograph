@@ -1,8 +1,8 @@
 import 'dart:ui';
 
+import 'package:Outograph/app/models/draw_pont.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:outograph/app/models/draw_pont.dart';
 
 class MyCustomPainter extends CustomPainter {
   MyCustomPainter({

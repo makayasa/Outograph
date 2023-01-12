@@ -1,13 +1,13 @@
 import 'dart:io';
 import 'dart:ui';
 
+import 'package:Outograph/app/components/canvas_item_global.dart';
+import 'package:Outograph/app/components/default_text.dart';
+import 'package:Outograph/app/components/profile_header.dart';
+import 'package:Outograph/app/helpers/canvas_helper.dart';
+import 'package:Outograph/app/models/image_model/image_widget_model.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:outograph/app/components/canvas_item_global.dart';
-import 'package:outograph/app/components/default_text.dart';
-import 'package:outograph/app/components/profile_header.dart';
-import 'package:outograph/app/helpers/canvas_helper.dart';
-import 'package:outograph/app/models/image_model/image_widget_model.dart';
 
 import '../../../config/constants.dart';
 import '../controllers/canvas_preview_controller.dart';

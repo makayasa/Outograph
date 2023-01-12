@@ -1,17 +1,17 @@
 import 'dart:convert';
 import 'dart:io';
 
+import 'package:Outograph/app/components/default_placeholder.dart';
+import 'package:Outograph/app/helpers/canvas_helper.dart';
+import 'package:Outograph/app/models/brush_model/brush_widget_model.dart';
+import 'package:Outograph/app/models/image_model/image_widget_model.dart';
+import 'package:Outograph/app/models/text_model/text_widget_models.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/src/widgets/container.dart';
 import 'package:flutter/src/widgets/framework.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:outograph/app/components/default_placeholder.dart';
-import 'package:outograph/app/helpers/canvas_helper.dart';
-import 'package:outograph/app/models/brush_model/brush_widget_model.dart';
-import 'package:outograph/app/models/image_model/image_widget_model.dart';
-import 'package:outograph/app/models/text_model/text_widget_models.dart';
 
 class CanvasItemGlobal extends StatelessWidget {
   const CanvasItemGlobal({

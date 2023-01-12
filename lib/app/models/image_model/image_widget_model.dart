@@ -1,4 +1,4 @@
-import 'package:outograph/app/helpers/canvas_helper.dart';
+import 'package:Outograph/app/helpers/canvas_helper.dart';
 
 class ImageWidgetModel {
   ImageWidgetModel({

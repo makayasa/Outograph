@@ -1,20 +1,20 @@
 import 'dart:io';
 
+import 'package:Outograph/app/components/default_placeholder.dart';
+import 'package:Outograph/app/components/default_text.dart';
+import 'package:Outograph/app/components/my_custom_painter.dart';
+import 'package:Outograph/app/config/constants.dart';
+import 'package:Outograph/app/helpers/canvas_helper.dart';
+import 'package:Outograph/app/helpers/text_align_helper.dart';
+import 'package:Outograph/app/models/draw_pont.dart';
+import 'package:Outograph/app/models/gif_widget_data_models.dart';
+import 'package:Outograph/app/models/image_widget_data_models.dart';
+import 'package:Outograph/app/modules/canvas/controllers/canvas_controller.dart';
+import 'package:Outograph/app/utils/function_utils.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:outograph/app/components/default_placeholder.dart';
-import 'package:outograph/app/components/default_text.dart';
-import 'package:outograph/app/components/my_custom_painter.dart';
-import 'package:outograph/app/config/constants.dart';
-import 'package:outograph/app/helpers/canvas_helper.dart';
-import 'package:outograph/app/helpers/text_align_helper.dart';
-import 'package:outograph/app/models/draw_pont.dart';
-import 'package:outograph/app/models/gif_widget_data_models.dart';
-import 'package:outograph/app/models/image_widget_data_models.dart';
-import 'package:outograph/app/modules/canvas/controllers/canvas_controller.dart';
-import 'package:outograph/app/utils/function_utils.dart';
 
 import '../../../models/text_widget_data_models.dart';
 

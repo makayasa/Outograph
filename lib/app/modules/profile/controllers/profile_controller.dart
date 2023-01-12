@@ -1,7 +1,7 @@
+import 'package:Outograph/app/config/environtment.dart';
+import 'package:Outograph/app/utils/function_utils.dart';
 import 'package:dio/dio.dart' as dio;
 import 'package:get/get.dart';
-import 'package:outograph/app/config/environtment.dart';
-import 'package:outograph/app/utils/function_utils.dart';
 
 import '../../../helpers/canvas_helper.dart';
 import '../../../utils/network_utils.dart';

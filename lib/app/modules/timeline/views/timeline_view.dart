@@ -1,9 +1,9 @@
 import 'dart:math' as math;
 
+import 'package:Outograph/app/components/timeline_item.dart';
+import 'package:Outograph/app/utils/function_utils.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:outograph/app/components/timeline_item.dart';
-import 'package:outograph/app/utils/function_utils.dart';
 
 import '../../../components/default_text.dart';
 import '../../../config/constants.dart';

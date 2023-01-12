@@ -1,7 +1,7 @@
+import 'package:Outograph/app/config/constants.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/src/widgets/container.dart';
 import 'package:flutter/src/widgets/framework.dart';
-import 'package:outograph/app/config/constants.dart';
 
 class BrushItem extends StatelessWidget {
   const BrushItem({

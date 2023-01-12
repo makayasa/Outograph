@@ -1,7 +1,7 @@
+import 'package:Outograph/app/modules/canvas/controllers/canvas_controller.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:outograph/app/modules/canvas/controllers/canvas_controller.dart';
 
 import '../../../components/default_text.dart';
 

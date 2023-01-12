@@ -1,8 +1,8 @@
+import 'package:Outograph/app/components/default_text.dart';
+import 'package:Outograph/app/routes/app_pages.dart';
+import 'package:Outograph/app/utils/function_utils.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:outograph/app/components/default_text.dart';
-import 'package:outograph/app/routes/app_pages.dart';
-import 'package:outograph/app/utils/function_utils.dart';
 
 import '../controllers/home_controller.dart';
 

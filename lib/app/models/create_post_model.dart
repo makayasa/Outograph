@@ -1,5 +1,5 @@
-import 'package:outograph/app/models/gif_model/gif_widget_model.dart';
-import 'package:outograph/app/models/text_model/text_widget_models.dart';
+import 'package:Outograph/app/models/gif_model/gif_widget_model.dart';
+import 'package:Outograph/app/models/text_model/text_widget_models.dart';
 
 import 'image_model/image_widget_model.dart';
 

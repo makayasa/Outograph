@@ -1,6 +1,6 @@
 import 'dart:convert';
 
-import 'package:outograph/app/models/text_model/text_font_model.dart';
+import 'package:Outograph/app/models/text_model/text_font_model.dart';
 
 TextWidgetModels textWidgetModelsFromJson(String str) => TextWidgetModels.fromJson(json.decode(str));
 

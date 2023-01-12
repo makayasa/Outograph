@@ -1,7 +1,7 @@
+import 'package:Outograph/app/config/constants.dart';
+import 'package:Outograph/app/modules/canvas/controllers/canvas_controller.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:outograph/app/config/constants.dart';
-import 'package:outograph/app/modules/canvas/controllers/canvas_controller.dart';
 
 class CanvasFontList extends GetView<CanvasController> {
   const CanvasFontList({super.key});

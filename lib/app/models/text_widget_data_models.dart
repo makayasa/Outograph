@@ -1,4 +1,4 @@
-import 'package:outograph/app/helpers/text_align_helper.dart';
+import 'package:Outograph/app/helpers/text_align_helper.dart';
 
 class TextWidgetDataModelsOld {
   TextWidgetDataModelsOld({

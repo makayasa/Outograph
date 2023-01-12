@@ -1,9 +1,9 @@
 import 'dart:typed_data';
 
+import 'package:Outograph/app/components/mx_gesture_detector.dart';
+import 'package:Outograph/app/utils/function_utils.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:outograph/app/components/mx_gesture_detector.dart';
-import 'package:outograph/app/utils/function_utils.dart';
 
 import '../modules/canvas/controllers/canvas_controller.dart';
 

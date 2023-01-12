@@ -1,7 +1,7 @@
+import 'package:Outograph/app/components/canvas_item_global.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/src/widgets/container.dart';
 import 'package:flutter/src/widgets/framework.dart';
-import 'package:outograph/app/components/canvas_item_global.dart';
 
 class TimelineItem extends StatelessWidget {
   const TimelineItem({
