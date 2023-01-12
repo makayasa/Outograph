@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "504594242501",
+    "project_id": "outograph-dev",
+    "storage_bucket": "outograph-dev.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:504594242501:android:ff2ba35d8902f86fe2c9ac",
+        "android_client_info": {
+          "package_name": "com.outograph"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "504594242501-j5sohfaod1r71chmqnc8j1o35714die4.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.outograph",
+            "certificate_hash": "5f3d8478a8240dd48437bf921d002e76ec1a1ef2"
+          }
+        },
+        {
+          "client_id": "504594242501-2rs8ppcggrgce1tuctvdeg8qt6at5r7b.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDzEvbI7PQUz9T9IiijwA_SSbi8j6Dj32s"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "504594242501-2rs8ppcggrgce1tuctvdeg8qt6at5r7b.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
