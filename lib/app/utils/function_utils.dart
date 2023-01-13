@@ -1,11 +1,14 @@
 import 'dart:convert';
 import 'dart:developer' as dev;
+import 'dart:io';
 import 'dart:math';
 import 'dart:typed_data';
 import 'dart:ui' as ui;
 
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:image_picker/image_picker.dart';
+import 'package:permission_handler/permission_handler.dart';
 
 Matrix4 translate(Offset translation) {
   var dx = translation.dx;
@@ -199,4 +202,23 @@ Future<String> drawerToImage(drawPoint) async {
   // final pngBytes = await img.toByteData(format: ImageByteFormat.rawStraightRgba);
   final base64 = base64Encode(Uint8List.view(pngBytes!.buffer));
   return base64;
+}
+
+//? Fungsi untuk ambil gambar dari kamera.
+//? Return null jika permission not granted / user tidak jadi mengambil gambar
+Future<File?> getImageCamera() async {
+  var status = await Permission.camera.status;
+  if (!status.isGranted) {
+    var newStatus = await Permission.camera.request();
+    if (!newStatus.isGranted) {
+      return null;
+    }
+  }
+  var img = await ImagePicker().pickImage(
+    source: ImageSource.camera,
+  );
+  if (img == null) {
+    return null;
+  }
+  return File(img.path);
 }
