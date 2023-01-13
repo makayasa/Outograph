@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-const giphyKey = 'ufpZMP5z8MowSKDSbkWOOOe9zPCIE0Q1';
+// const giphyKey = 'ufpZMP5z8MowSKDSbkWOOOe9zPCIE0Q1';
 
 const kBgWhite = Color(0xFFfafafa);
 const kBgBlack = Color(0xFF191508);

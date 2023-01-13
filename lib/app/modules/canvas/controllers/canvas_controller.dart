@@ -30,6 +30,7 @@ import 'package:vector_math/vector_math.dart' as vm;
 
 import '../../../components/default_text.dart';
 import '../../../config/constants.dart';
+import '../../../config/environtment.dart';
 import '../../../models/create_post_model.dart';
 import '../../../models/gif_widget_data_models.dart';
 import '../../../utils/function_utils.dart';
@@ -1011,7 +1012,6 @@ class CanvasController extends GetxController {
   void openImage() async {
     imageScrollController = ScrollController();
     tempMinHeigh.value = Get.height * 0.3;
-
     panelImageController.show();
     imageScrollController.addListener(() async {
       if (imageScrollController.position.pixels == imageScrollController.position.maxScrollExtent) {
@@ -1046,7 +1046,7 @@ class CanvasController extends GetxController {
     }
     var res = await GiphyGet.getGif(
       context: Get.context!,
-      apiKey: giphyKey,
+      apiKey: giphyKey!,
       // randomID: 'abcd',
     );
     botNavIndex.value = -1;

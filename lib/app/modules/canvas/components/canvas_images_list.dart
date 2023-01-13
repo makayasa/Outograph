@@ -1,6 +1,7 @@
 import 'package:Outograph/app/config/constants.dart';
 import 'package:Outograph/app/helpers/canvas_helper.dart';
 import 'package:Outograph/app/modules/canvas/controllers/canvas_controller.dart';
+import 'package:Outograph/app/utils/function_utils.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/src/widgets/container.dart';
 import 'package:flutter/src/widgets/framework.dart';
@@ -57,33 +58,59 @@ class CanvasImagesList extends GetView<CanvasController> {
                 ),
                 itemCount: controller.listImages.length,
                 itemBuilder: (context, index) {
-                  return GestureDetector(
-                    onTap: () async {
-                      var path = await controller.listImages[index].file;
-                      await controller.closeImage();
-                      controller.botNavIndex.value = -1;
-                      controller.addWidget(
-                        type: CanvasItemType.IMAGE,
-                        data: path!.path,
-                      );
-                    },
-                    child: Container(
-                      decoration: BoxDecoration(
-                        border: Border(
-                          top: BorderSide(
-                            color: kBgBlack,
-                          ),
-                          left: BorderSide(
-                            color: kBgBlack,
-                          ),
+                  if (index == 0) {
+                    return GestureDetector(
+                      onTap: () async {
+                        var path = await getImageCamera();
+                        if (path == null) {
+                          return;
+                        }
+                        controller.addWidget(
+                          type: CanvasItemType.IMAGE,
+                          data: path.path,
+                        );
+                      },
+                      child: Container(
+                        decoration: BoxDecoration(
+                          color: Colors.black,
+                        ),
+                        child: Icon(
+                          Icons.photo_camera,
+                          color: kBgWhite,
+                          size: 15,
                         ),
                       ),
-                      child: AssetEntityImage(
-                        controller.listImages[index],
-                        isOriginal: false,
+                    );
+                  } else {
+                    return GestureDetector(
+                      onTap: () async {
+                        var path = await controller.listImages[index - 1].file;
+                        await controller.closeImage();
+                        controller.botNavIndex.value = -1;
+                        controller.addWidget(
+                          type: CanvasItemType.IMAGE,
+                          data: path!.path,
+                        );
+                      },
+                      child: Container(
+                        decoration: BoxDecoration(
+                          border: Border(
+                            top: BorderSide(
+                              color: kBgBlack,
+                            ),
+                            left: BorderSide(
+                              color: kBgBlack,
+                            ),
+                          ),
+                        ),
+                        child: AssetEntityImage(
+                          controller.listImages[index - 1],
+                          isOriginal: false,
+                          fit: BoxFit.cover,
+                        ),
                       ),
-                    ),
-                  );
+                    );
+                  }
                 },
               ),
             ),
