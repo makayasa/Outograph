@@ -8,7 +8,7 @@
 PRODUCT_NAME = outograph
 
 // The application's bundle identifier
-PRODUCT_BUNDLE_IDENTIFIER = com.outograph.outograph
+PRODUCT_BUNDLE_IDENTIFIER = com.outograph
 
 // The copyright displayed in application information
 PRODUCT_COPYRIGHT = Copyright © 2022 com.outograph. All rights reserved.
